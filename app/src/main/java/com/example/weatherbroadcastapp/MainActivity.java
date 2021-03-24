@@ -2,6 +2,8 @@ package com.example.weatherbroadcastapp;
 
 import android.os.Bundle;
 
+import com.example.lib.Location;
+import com.example.lib.Services;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -30,6 +32,10 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        for(Location location: Services.get().getWeatherForecastService().getAvailableLocations()) {
+            System.out.println(location.getDisplayName());
+        }
     }
 
     @Override
