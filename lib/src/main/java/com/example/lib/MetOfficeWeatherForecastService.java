@@ -15,25 +15,36 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
 
     }
 
-
+    /**
+     * @see WeatherForecastService
+     */
     @Override
-    public ArrayList<DetailedWeatherForecastSample> getDetailedForecast(Date start, Duration resolution, Location location) {
+    public ArrayList<DetailedWeatherForecastSample> getDetailedForecast(Date start, Duration resolution, int numSamples, Location location) {
         // TODO: Please implement
         return null;
     }
 
+    /**
+     * @see WeatherForecastService
+     */
     @Override
-    public ArrayList<SimpleWeatherForecastSample> getSimpleForecast(Date start, Duration resolution, Location location) {
+    public ArrayList<SimpleWeatherForecastSample> getSimpleForecast(Date start, Duration resolution, int numSamples, Location location) {
         // TODO: Please implement
         return null;
     }
 
+    /**
+     * @see WeatherForecastService
+     */
     @Override
     public TextualForecast getLongTermForecast() {
         // TODO: Please implement
         return null;
     }
 
+    /**
+     * @see WeatherForecastService
+     */
     @Override
     public ArrayList<Location> getAvailableLocations() {
         // TODO: Please implement

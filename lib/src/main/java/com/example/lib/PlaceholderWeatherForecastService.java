@@ -10,12 +10,12 @@ import java.util.Date;
  */
 public class PlaceholderWeatherForecastService implements WeatherForecastService {
     @Override
-    public ArrayList<DetailedWeatherForecastSample> getDetailedForecast(Date start, Duration resolution, Location location) {
+    public ArrayList<DetailedWeatherForecastSample> getDetailedForecast(Date start, Duration resolution, int numSamples, Location location) {
         return null;
     }
 
     @Override
-    public ArrayList<SimpleWeatherForecastSample> getSimpleForecast(Date start, Duration resolution, Location location) {
+    public ArrayList<SimpleWeatherForecastSample> getSimpleForecast(Date start, Duration resolution, int numSamples, Location location) {
         return null;
     }
 
