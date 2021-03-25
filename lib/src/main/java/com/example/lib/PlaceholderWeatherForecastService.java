@@ -1,6 +1,8 @@
 package com.example.lib;
 
+import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Date;
 
 /*
 * Returns artificially constructed data so that this can be used as a placeholder for
@@ -8,12 +10,12 @@ import java.util.ArrayList;
  */
 public class PlaceholderWeatherForecastService implements WeatherForecastService {
     @Override
-    public ArrayList<DetailedWeatherForecastSample> getDetailedForecast() {
+    public ArrayList<DetailedWeatherForecastSample> getDetailedForecast(Date start, Duration resolution, Location location) {
         return null;
     }
 
     @Override
-    public ArrayList<SimpleWeatherForecastSample> getSimpleForecast() {
+    public ArrayList<SimpleWeatherForecastSample> getSimpleForecast(Date start, Duration resolution, Location location) {
         return null;
     }
 

@@ -1,5 +1,7 @@
 package com.example.lib;
+import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Date;
 
 /*
 * Note: There are many HTTP clients that we could use but
@@ -10,18 +12,18 @@ import java.util.ArrayList;
 
 public class MetOfficeWeatherForecastService implements WeatherForecastService {
     MetOfficeWeatherForecastService() {
-        // Test comment
+
     }
 
 
     @Override
-    public ArrayList<DetailedWeatherForecastSample> getDetailedForecast() {
+    public ArrayList<DetailedWeatherForecastSample> getDetailedForecast(Date start, Duration resolution, Location location) {
         // TODO: Please implement
         return null;
     }
 
     @Override
-    public ArrayList<SimpleWeatherForecastSample> getSimpleForecast() {
+    public ArrayList<SimpleWeatherForecastSample> getSimpleForecast(Date start, Duration resolution, Location location) {
         // TODO: Please implement
         return null;
     }
