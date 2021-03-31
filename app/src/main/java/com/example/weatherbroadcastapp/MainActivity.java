@@ -1,5 +1,6 @@
 package com.example.weatherbroadcastapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.lib.Location;
@@ -14,24 +15,17 @@ import android.view.View;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        Button toMapViewButton = findViewById(R.id.button_toMapView);
+        toMapViewButton.setOnClickListener(this);
 
         for(Location location: Services.get().getWeatherForecastService().getAvailableLocations()) {
             System.out.println(location.getDisplayName());
@@ -58,5 +52,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        if(v.getId() == R.id.button_toMapView) {
+            Intent mapActivityIntent = new Intent(this, MapActivity.class);
+            startActivity(mapActivityIntent);
+        }
     }
 }
