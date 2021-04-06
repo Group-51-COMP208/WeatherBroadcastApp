@@ -11,6 +11,10 @@ public class Services {
         return weatherForecastService;
     }
 
+    public FavouriteLocationService getFavouriteLocationService() {
+        return favouriteLocationService;
+    }
+
     public static Services get() {
         if(instance == null) {
             // 'synchronized' makes this thread-safe, just in case
@@ -26,8 +30,12 @@ public class Services {
     private Services() {
         // Placeholder. TODO: Switch to real implementation once it is sufficiently complete
         weatherForecastService = new PlaceholderWeatherForecastService();
+        // Placeholder. TODO: Switch to real implementation once it is sufficiently complete
+        favouriteLocationService = new PlaceholderFavouriteLocationService();
     }
+
     private static Services instance = null;
 
     WeatherForecastService weatherForecastService;
+    FavouriteLocationService favouriteLocationService;
 }
