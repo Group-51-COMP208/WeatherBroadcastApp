@@ -11,4 +11,7 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 
     <string name="uk_map_description">Map of UK</string>
+
+    <string name="n_degrees_c">"%d°C"</string>
+    <string name="n_mph">"%dmph"</string>
 </resources>

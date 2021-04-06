@@ -3,6 +3,7 @@ package com.example.weatherbroadcastapp;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.lib.DetailedWeatherForecastSample;
 import com.example.lib.Location;
 import com.example.lib.Services;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -16,6 +17,12 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -30,6 +37,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         for(Location location: Services.get().getWeatherForecastService().getAvailableLocations()) {
             System.out.println(location.getDisplayName());
         }
+
+        // TODO: get user's actual current location if possible, as a default?
+        currentLocation = Services.get().getFavouriteLocationService().getFavouriteLocation();
+        updateWeatherInfo();
     }
 
     @Override
@@ -62,4 +73,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(mapActivityIntent);
         }
     }
+
+
+    public void updateWeatherInfo() {
+        TextView textView_currentLocation = findViewById(R.id.textView_currentLocation);
+        TextView textView_currentTemperature = findViewById(R.id.textView_currentTemperature);
+        TextView textView_currentWindSpeed = findViewById(R.id.textView_currentWindSpeed);
+        ImageView imageView_currentWindDirection = findViewById(R.id.imageView_currentWindDirection);
+        ImageView imageView_weatherIcon = findViewById(R.id.imageView_weatherIcon);
+        textView_currentLocation.setText(currentLocation.getDisplayName());
+
+        DetailedWeatherForecastSample sample = Services.get().getWeatherForecastService().getDetailedForecast(Calendar.getInstance(),
+                                            Duration.ofHours(1), 1, currentLocation).get(0);
+        textView_currentTemperature.setText(String.format(getString(R.string.n_degrees_c), (int)sample.temperature_celsius));
+        textView_currentWindSpeed.setText(String.format(getString(R.string.n_mph), (int) sample.windSpeed_mph));
+    }
+
+    private Location currentLocation = null;
 }
