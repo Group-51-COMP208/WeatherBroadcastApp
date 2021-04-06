@@ -1,7 +1,7 @@
 package com.example.lib;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.time.Duration;
 
 
@@ -19,7 +19,7 @@ public interface WeatherForecastService {
      * @return An array of weather forecast samples, ordered by increasing time in increments
      * specified by 'resolution', starting from 'start'.
      */
-    ArrayList<DetailedWeatherForecastSample> getDetailedForecast(Date start, Duration resolution, int numSamples, Location location);
+    ArrayList<DetailedWeatherForecastSample> getDetailedForecast(Calendar start, Duration resolution, int numSamples, Location location);
 
     /**
      * Gets an array of localized weather predictions for the specified period, with just simple
@@ -31,7 +31,7 @@ public interface WeatherForecastService {
      * @return An array of weather forecast samples, ordered by increasing time in increments
      * specified by 'resolution', starting from 'start'.
      */
-    ArrayList<SimpleWeatherForecastSample> getSimpleForecast(Date start, Duration resolution, int numSamples, Location location);
+    ArrayList<SimpleWeatherForecastSample> getSimpleForecast(Calendar start, Duration resolution, int numSamples, Location location);
 
     /**
      * A long term forecast from the weather service

@@ -1,7 +1,7 @@
 package com.example.lib;
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 
 /*
 * Note: There are many HTTP clients that we could use but
@@ -19,7 +19,7 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
      * @see WeatherForecastService
      */
     @Override
-    public ArrayList<DetailedWeatherForecastSample> getDetailedForecast(Date start, Duration resolution, int numSamples, Location location) {
+    public ArrayList<DetailedWeatherForecastSample> getDetailedForecast(Calendar start, Duration resolution, int numSamples, Location location) {
         // TODO: Please implement
         return null;
     }
@@ -28,7 +28,7 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
      * @see WeatherForecastService
      */
     @Override
-    public ArrayList<SimpleWeatherForecastSample> getSimpleForecast(Date start, Duration resolution, int numSamples, Location location) {
+    public ArrayList<SimpleWeatherForecastSample> getSimpleForecast(Calendar start, Duration resolution, int numSamples, Location location) {
         // TODO: Please implement
         return null;
     }
