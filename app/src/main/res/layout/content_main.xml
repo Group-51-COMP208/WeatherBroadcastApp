@@ -102,6 +102,7 @@
                 android:layout_height="wrap_content"
                 android:text="Next Three Days"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
         </LinearLayout>
 
         <Button
