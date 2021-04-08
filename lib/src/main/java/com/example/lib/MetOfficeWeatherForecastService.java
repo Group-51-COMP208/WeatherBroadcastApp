@@ -1,4 +1,9 @@
 package com.example.lib;
+import java.io.BufferedInputStream;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -62,5 +67,23 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
         // I suggest we use this to try out API calls
         MetOfficeWeatherForecastService ws = new MetOfficeWeatherForecastService();
         System.out.println("You can see this output in the 'run' tab at the bottom");
+
+
+        try {
+            URL url = new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/sitelist?key=474b382b-4970-4685-a1dd-8bffd071216b");
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            try {
+                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+                byte[] bytes = new byte[1000000];
+                in.read(bytes);
+                String s = new String(bytes, StandardCharsets.UTF_8);
+                System.out.println(s);
+            } finally {
+                urlConnection.disconnect();
+            }
+        }
+        catch(Exception e) {
+            System.out.println(e);
+        }
     }
 }
