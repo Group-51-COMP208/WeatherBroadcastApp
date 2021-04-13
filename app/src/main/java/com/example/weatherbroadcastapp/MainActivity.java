@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                             Duration.ofHours(1), 1, currentLocation).get(0);
         textView_currentTemperature.setText(String.format(getString(R.string.n_degrees_c), (int)sample.temperature_celsius));
         textView_currentWindSpeed.setText(String.format(getString(R.string.n_mph), (int) sample.windSpeed_mph));
+        imageView_weatherIcon.setImageResource(WeatherIcons.getIconId(sample.weatherType));
     }
 
     private Location currentLocation = null;
