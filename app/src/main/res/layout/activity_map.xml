@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MapActivity" >
+    tools:context=".MapActivity">
 
-    <ImageView
-        android:id="@+id/imageView_map"
-        android:layout_width="wrap_content"
+    <com.example.weatherbroadcastapp.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:adjustViewBounds="true"
-        android:contentDescription="@string/uk_map_description"
-        android:scaleType="fitCenter"
-        app:srcCompat="@drawable/map_mercator_uk" />
-
-</FrameLayout>
+        app:exampleString="How do you do" />
+</RelativeLayout>
