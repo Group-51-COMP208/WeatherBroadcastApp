@@ -14,29 +14,37 @@ import android.view.View;
 
 import androidx.core.content.ContextCompat;
 
+import com.example.lib.DetailedWeatherForecastSample;
+import com.example.lib.Location;
+import com.example.lib.Services;
+import com.example.lib.WeatherForecastService;
+
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * TODO: document your custom view class.
+ * View containing UK map which fetches and displays weather data from the forecast service
+ * Designed to work only with the specific mercator projection map that it uses
  */
 public class MapView extends View {
-    private String mExampleString; // TODO: use a default from R.string...
-    private int mExampleColor = Color.RED; // TODO: use a default from R.color...
-    private float mExampleDimension = 0; // TODO: use a default from R.dimen...
-    private Drawable mExampleDrawable;
-
     private TextPaint mTextPaint;
-    private float mTextWidth;
-    private float mTextHeight;
 
-    private Rect mRect;
-    private Paint mPaint;
-
-    // The map appears to include the island of Hirta and possible its neighbouring
+    // The map appears to include the island of Hirta and possibly its neighbouring
     // island, Soay as the westmost location
-    private static final double map_westmost_longitude = -8.638;
-    private static final double map_eastmost_longitude = 1.76;
-    private static final double map_northmost_latitude = 60.86;
-    private static final double map_southmost_latitude = 49.86;
+    private static final double MAP_WESTMOST_LONGITUDE = -8.638;
+    private static final double MAP_EASTMOST_LONGITUDE = 1.76;
+    private static final double MAP_NORTHMOST_LATITUDE = 60.86;
+    private static final double MAP_SOUTHMOST_LATITUDE = 49.86;
 
+    private ArrayList<Location> significantLocations;
+    final private Duration sampleResolution = Duration.ofHours(1);
+    final private int numSamples = 18;
+    final private int currentSample = 0;
+
+    Map<String, ArrayList<DetailedWeatherForecastSample>> samples = new HashMap<String, ArrayList<DetailedWeatherForecastSample>>();
 
     private Drawable mMapDrawable;
 
@@ -60,47 +68,29 @@ public class MapView extends View {
         final TypedArray a = getContext().obtainStyledAttributes(
                 attrs, R.styleable.MapView, defStyle, 0);
 
-        mExampleString = a.getString(
-                R.styleable.MapView_exampleString);
-        mExampleColor = a.getColor(
-                R.styleable.MapView_exampleColor,
-                mExampleColor);
-        // Use getDimensionPixelSize or getDimensionPixelOffset when dealing with
-        // values that should fall on pixel boundaries.
-        mExampleDimension = a.getDimension(
-                R.styleable.MapView_exampleDimension,
-                mExampleDimension);
-
-        if (a.hasValue(R.styleable.MapView_exampleDrawable)) {
-            mExampleDrawable = a.getDrawable(
-                    R.styleable.MapView_exampleDrawable);
-            mExampleDrawable.setCallback(this);
-        }
-
         a.recycle();
 
         // Set up a default TextPaint object
         mTextPaint = new TextPaint();
         mTextPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
-        mTextPaint.setTextAlign(Paint.Align.LEFT);
-
-        // Update TextPaint and text measurements from attributes
-        invalidateTextPaintAndMeasurements();
-
-        mRect = new Rect();
-        mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mTextPaint.setTextAlign(Paint.Align.CENTER);
+        mTextPaint.setTextSize(50);
+        mTextPaint.setColor(Color.WHITE);
 
         mMapDrawable = ContextCompat.getDrawable(getContext(), R.drawable.map_mercator_uk);
+
+        WeatherForecastService wfs = Services.get().getWeatherForecastService();
+        significantLocations = new ArrayList<Location>();
+        significantLocations.add(wfs.getLocationByName("London"));
+        significantLocations.add(wfs.getLocationByName("Cardiff"));
+        significantLocations.add(wfs.getLocationByName("Manchester"));
+        significantLocations.add(wfs.getLocationByName("Glasgow"));
+
+        for(Location l: significantLocations) {
+            samples.put(l.getDisplayName(), wfs.getDetailedForecast(Calendar.getInstance(), sampleResolution, numSamples, l));
+        }
     }
 
-    private void invalidateTextPaintAndMeasurements() {
-        mTextPaint.setTextSize(mExampleDimension);
-        mTextPaint.setColor(mExampleColor);
-        mTextWidth = mTextPaint.measureText(mExampleString);
-
-        Paint.FontMetrics fontMetrics = mTextPaint.getFontMetrics();
-        mTextHeight = fontMetrics.bottom;
-    }
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -117,114 +107,25 @@ public class MapView extends View {
         System.out.println("liv long: " + String.valueOf(liv.y) + " liv lat: " + String.valueOf(liv.y));
         iconDrawable.draw(canvas);
 
-        // TODO: consider storing these as member variables to reduce
-        // allocations per draw cycle.
-//        int paddingLeft = getPaddingLeft();
-//        int paddingTop = getPaddingTop();
-//        int paddingRight = getPaddingRight();
-//        int paddingBottom = getPaddingBottom();
-//
-//        int contentWidth = getWidth() - paddingLeft - paddingRight;
-//        int contentHeight = getHeight() - paddingTop - paddingBottom;
-//
-//        // Draw the text.
-//        canvas.drawText(mExampleString,
-//                paddingLeft + (contentWidth - mTextWidth) / 2,
-//                paddingTop + (contentHeight + mTextHeight) / 2,
-//                mTextPaint);
-//
-//        // Draw the example drawable on top of the text.
-//        if (mExampleDrawable != null) {
-//            mExampleDrawable.setBounds(paddingLeft, paddingTop,
-//                    paddingLeft + contentWidth, paddingTop + contentHeight);
-//            mExampleDrawable.draw(canvas);
-//        }
+        for(Location l: significantLocations) {
+            final DetailedWeatherForecastSample s = samples.get(l.getDisplayName()).get(currentSample);
+            Point drawCoords = toCanvasCoords(s.location.getLongitude(), s.location.getLatitude());
+
+            // draw text of temp
+            canvas.drawText(String.format(getContext().getString(R.string.n_degrees_c), (int)s.temperature_celsius),
+                drawCoords.x,
+                drawCoords.y,
+                mTextPaint);
+            System.out.println("drawing " + l.getDisplayName() + " at " + drawCoords.toString());
+        }
+
     }
 
     public Point toCanvasCoords(double longitude, double latitude) {
-        final double longitude_range = map_eastmost_longitude - map_westmost_longitude;
-        final double latitude_range  = map_northmost_latitude - map_southmost_latitude;
-        final double x_normalized    = (longitude - map_westmost_longitude) / longitude_range;
-        final double y_normalized    = (latitude - map_southmost_latitude) / latitude_range;
+        final double longitude_range = MAP_EASTMOST_LONGITUDE - MAP_WESTMOST_LONGITUDE;
+        final double latitude_range  = MAP_NORTHMOST_LATITUDE - MAP_SOUTHMOST_LATITUDE;
+        final double x_normalized    = (longitude - MAP_WESTMOST_LONGITUDE) / longitude_range;
+        final double y_normalized    = (latitude - MAP_SOUTHMOST_LATITUDE) / latitude_range;
         return new Point((int) (x_normalized * getWidth()), (int) (getHeight() - y_normalized * getHeight()));
-    }
-
-    /**
-     * Gets the example string attribute value.
-     *
-     * @return The example string attribute value.
-     */
-    public String getExampleString() {
-        return mExampleString;
-    }
-
-    /**
-     * Sets the view"s example string attribute value. In the example view, this string
-     * is the text to draw.
-     *
-     * @param exampleString The example string attribute value to use.
-     */
-    public void setExampleString(String exampleString) {
-        mExampleString = exampleString;
-        invalidateTextPaintAndMeasurements();
-    }
-
-    /**
-     * Gets the example color attribute value.
-     *
-     * @return The example color attribute value.
-     */
-    public int getExampleColor() {
-        return mExampleColor;
-    }
-
-    /**
-     * Sets the view"s example color attribute value. In the example view, this color
-     * is the font color.
-     *
-     * @param exampleColor The example color attribute value to use.
-     */
-    public void setExampleColor(int exampleColor) {
-        mExampleColor = exampleColor;
-        invalidateTextPaintAndMeasurements();
-    }
-
-    /**
-     * Gets the example dimension attribute value.
-     *
-     * @return The example dimension attribute value.
-     */
-    public float getExampleDimension() {
-        return mExampleDimension;
-    }
-
-    /**
-     * Sets the view"s example dimension attribute value. In the example view, this dimension
-     * is the font size.
-     *
-     * @param exampleDimension The example dimension attribute value to use.
-     */
-    public void setExampleDimension(float exampleDimension) {
-        mExampleDimension = exampleDimension;
-        invalidateTextPaintAndMeasurements();
-    }
-
-    /**
-     * Gets the example drawable attribute value.
-     *
-     * @return The example drawable attribute value.
-     */
-    public Drawable getExampleDrawable() {
-        return mExampleDrawable;
-    }
-
-    /**
-     * Sets the view"s example drawable attribute value. In the example view, this drawable is
-     * drawn above the text.
-     *
-     * @param exampleDrawable The example drawable attribute value to use.
-     */
-    public void setExampleDrawable(Drawable exampleDrawable) {
-        mExampleDrawable = exampleDrawable;
     }
 }
