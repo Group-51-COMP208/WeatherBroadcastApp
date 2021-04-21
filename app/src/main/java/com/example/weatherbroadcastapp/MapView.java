@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat;
 import com.example.lib.DetailedWeatherForecastSample;
 import com.example.lib.Location;
 import com.example.lib.Services;
+import com.example.lib.Utilities;
 import com.example.lib.WeatherForecastService;
 
 import java.time.Duration;
@@ -40,9 +41,10 @@ public class MapView extends View {
     private static final double MAP_SOUTHMOST_LATITUDE = 49.86;
 
     private ArrayList<Location> significantLocations;
-    final private Duration sampleResolution = Duration.ofHours(1);
+    private Calendar startTime;
+    final private Duration sampleResolution = Duration.ofHours(4);
     final private int numSamples = 18;
-    final private int currentSample = 0;
+    private int currentSample = 0;
 
     Map<String, ArrayList<DetailedWeatherForecastSample>> samples = new HashMap<String, ArrayList<DetailedWeatherForecastSample>>();
 
@@ -85,9 +87,12 @@ public class MapView extends View {
         significantLocations.add(wfs.getLocationByName("Cardiff"));
         significantLocations.add(wfs.getLocationByName("Manchester"));
         significantLocations.add(wfs.getLocationByName("Glasgow"));
+        significantLocations.add(wfs.getLocationByName("Belfast"));
+
+        startTime = Calendar.getInstance();
 
         for(Location l: significantLocations) {
-            samples.put(l.getDisplayName(), wfs.getDetailedForecast(Calendar.getInstance(), sampleResolution, numSamples, l));
+            samples.put(l.getDisplayName(), wfs.getDetailedForecast( startTime, sampleResolution, numSamples, l));
         }
     }
 
@@ -101,11 +106,10 @@ public class MapView extends View {
         mMapDrawable.setBounds(0,0, getWidth(), getHeight());
         mMapDrawable.draw(canvas);
 
-        Drawable iconDrawable = ContextCompat.getDrawable(getContext(), R.drawable.icon_sun);
-        Point liv = toCanvasCoords(-3.0, 53.4);
-        iconDrawable.setBounds(liv.x, liv.y, liv.x + 50, liv.y + 50);
-        System.out.println("liv long: " + String.valueOf(liv.y) + " liv lat: " + String.valueOf(liv.y));
-        iconDrawable.draw(canvas);
+//        Drawable iconDrawable = ContextCompat.getDrawable(getContext(), R.drawable.icon_sun);
+//        Point liv = toCanvasCoords(-3.0, 53.4);
+//        iconDrawable.setBounds(liv.x, liv.y, liv.x + 50, liv.y + 50);
+//        iconDrawable.draw(canvas);
 
         for(Location l: significantLocations) {
             final DetailedWeatherForecastSample s = samples.get(l.getDisplayName()).get(currentSample);
@@ -116,9 +120,7 @@ public class MapView extends View {
                 drawCoords.x,
                 drawCoords.y,
                 mTextPaint);
-            System.out.println("drawing " + l.getDisplayName() + " at " + drawCoords.toString());
         }
-
     }
 
     public Point toCanvasCoords(double longitude, double latitude) {
@@ -127,5 +129,22 @@ public class MapView extends View {
         final double x_normalized    = (longitude - MAP_WESTMOST_LONGITUDE) / longitude_range;
         final double y_normalized    = (latitude - MAP_SOUTHMOST_LATITUDE) / latitude_range;
         return new Point((int) (x_normalized * getWidth()), (int) (getHeight() - y_normalized * getHeight()));
+    }
+
+    // The time for which forecasts are currently being displayed
+    public Calendar getCurrentTime() {
+        return Utilities.addTime(startTime, sampleResolution, currentSample);
+    }
+
+    // Specifies the time to show the weather for as a zero to one ratio between the current
+    // (real) time and the time of the latest cached sample. Intended for slider bars.
+    public void setTimeNormalized(float time0to1) {
+        if(time0to1 > 1.f)       time0to1 = 1.f;
+        else if(time0to1 < 0.f)  time0to1 = 0.f;
+        int newSample = (int) (time0to1 * (numSamples - 1));
+        if(currentSample != newSample) {
+            currentSample = newSample;
+            invalidate();
+        }
     }
 }
