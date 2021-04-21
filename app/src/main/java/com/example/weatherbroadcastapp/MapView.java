@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
@@ -39,6 +40,8 @@ public class MapView extends View {
     private static final double MAP_EASTMOST_LONGITUDE = 1.76;
     private static final double MAP_NORTHMOST_LATITUDE = 60.86;
     private static final double MAP_SOUTHMOST_LATITUDE = 49.86;
+
+    private static final int ICON_DRAW_SIZE         = 100;
 
     private ArrayList<Location> significantLocations;
     private Calendar startTime;
@@ -84,7 +87,7 @@ public class MapView extends View {
         WeatherForecastService wfs = Services.get().getWeatherForecastService();
         significantLocations = new ArrayList<Location>();
         significantLocations.add(wfs.getLocationByName("London"));
-        significantLocations.add(wfs.getLocationByName("Cardiff"));
+        significantLocations.add(wfs.getLocationByName("Brecon"));
         significantLocations.add(wfs.getLocationByName("Manchester"));
         significantLocations.add(wfs.getLocationByName("Glasgow"));
         significantLocations.add(wfs.getLocationByName("Belfast"));
@@ -106,14 +109,14 @@ public class MapView extends View {
         mMapDrawable.setBounds(0,0, getWidth(), getHeight());
         mMapDrawable.draw(canvas);
 
-//        Drawable iconDrawable = ContextCompat.getDrawable(getContext(), R.drawable.icon_sun);
-//        Point liv = toCanvasCoords(-3.0, 53.4);
-//        iconDrawable.setBounds(liv.x, liv.y, liv.x + 50, liv.y + 50);
-//        iconDrawable.draw(canvas);
-
         for(Location l: significantLocations) {
             final DetailedWeatherForecastSample s = samples.get(l.getDisplayName()).get(currentSample);
             Point drawCoords = toCanvasCoords(s.location.getLongitude(), s.location.getLatitude());
+
+            Drawable iconDrawable = ContextCompat.getDrawable(getContext(), WeatherIcons.getIconId(s.weatherType));
+            iconDrawable.setBounds(drawCoords.x, drawCoords.y, drawCoords.x + ICON_DRAW_SIZE,
+                            drawCoords.y + ICON_DRAW_SIZE);
+            iconDrawable.draw(canvas);
 
             // draw text of temp
             canvas.drawText(String.format(getContext().getString(R.string.n_degrees_c), (int)s.temperature_celsius),

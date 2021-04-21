@@ -59,6 +59,7 @@ public class PlaceholderWeatherForecastService implements WeatherForecastService
         locations.add(new Location("London", "?", 51.5f, -0.13f));
         locations.add(new Location("Glasgow", "?", 55.9f, -4.25f));
         locations.add(new Location("Cardiff", "?", 51.48f, -3.18f));
+        locations.add(new Location("Brecon", "?", 51.95f, -3.39f));
         locations.add(new Location("Belfast", "?", 54.6f, -5.93f));
 
         return locations;
