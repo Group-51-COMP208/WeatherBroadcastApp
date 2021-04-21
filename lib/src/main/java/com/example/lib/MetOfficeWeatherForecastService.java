@@ -56,6 +56,17 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
         return null;
     }
 
+    /**
+     * @see WeatherForecastService
+     */
+    @Override
+    public Location getLocationByName(String displayName) {
+        // TODO: Implement after getAvailableLocations
+        // I suggest some sort of caching of the available locations
+        // to reduce calls to the API
+        return null;
+    }
+
     // This API key is from an account created by Jonathan Wood
     // (J.M.Wood2@student.liverpool.ac.uk)
     private final String apiKey = "474b382b-4970-4685-a1dd-8bffd071216b";

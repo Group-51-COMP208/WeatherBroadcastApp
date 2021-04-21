@@ -56,7 +56,22 @@ public class PlaceholderWeatherForecastService implements WeatherForecastService
         ArrayList<Location> locations = new ArrayList<>();
         locations.add(new Location("Liverpool", "?", 53.4f, -2.99f));
         locations.add(new Location("Manchester", "?", 53.4f, -2.24f));
+        locations.add(new Location("London", "?", 51.5f, -0.13f));
+        locations.add(new Location("Glasgow", "?", 55.9f, -4.25f));
+        locations.add(new Location("Cardiff", "?", 51.48f, -3.18f));
+
         return locations;
+    }
+
+
+    @Override
+    public Location getLocationByName(String displayName) {
+        for(Location l: getAvailableLocations()) {
+            if(l.getDisplayName().equals(displayName)) {
+                return l;
+            }
+        }
+        return null;
     }
 
 

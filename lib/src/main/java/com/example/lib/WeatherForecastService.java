@@ -49,4 +49,11 @@ public interface WeatherForecastService {
      * all properties set correctly
      */
     ArrayList<Location> getAvailableLocations();
+
+    /**
+     *
+     * @param displayName name of the location, as it appears in the underlying API
+     * @return Location object of the requested displayName, with all other fields set
+     */
+    Location getLocationByName(String displayName);
 }
