@@ -44,6 +44,9 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
     @Override
     public TextualForecast getLongTermForecast() {
         // TODO: Please implement
+        /* API link
+        "http://datapoint.metoffice.gov.uk/public/data/txt/wxfcs/regionalforecast/json/500?key=6cb4001b-cb25-4682-baf3-61a64918d89b"
+       */
         return null;
     }
 
