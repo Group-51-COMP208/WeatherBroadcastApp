@@ -34,12 +34,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button toMapViewButton = findViewById(R.id.button_toMapView);
         toMapViewButton.setOnClickListener(this);
 
+        Button detailedForecastButton = findViewById(R.id.button_detailedForcast);
+        detailedForecastButton.setOnClickListener(this);
+
         for(Location location: Services.get().getWeatherForecastService().getAvailableLocations()) {
             System.out.println(location.getDisplayName());
         }
 
         // TODO: get user's actual current location if possible, as a default?
-        currentLocation = Services.get().getFavouriteLocationService().getFavouriteLocation();
+        currentLocation = Services.get().getFavouriteLocationService().getSelectedLocation();
         updateWeatherInfo();
     }
 
@@ -71,6 +74,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(v.getId() == R.id.button_toMapView) {
             Intent mapActivityIntent = new Intent(this, MapActivity.class);
             startActivity(mapActivityIntent);
+        }
+        else if(v.getId() == R.id.button_detailedForcast) {
+            Intent detailedForecastIntent = new Intent(this, DetailedForecastActivity.class);
+
+            startActivity(detailedForecastIntent);
         }
     }
 

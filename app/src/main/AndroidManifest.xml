@@ -10,15 +10,18 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.WeatherBroadcastApp"
-        >
-        <activity android:name=".MapActivity"
-            android:screenOrientation="portrait"></activity>
+        android:theme="@style/Theme.WeatherBroadcastApp">
+        <activity
+            android:name=".DetailedForecastActivity"
+            android:label="@string/title_activity_detailed_forecast"
+            android:theme="@style/Theme.WeatherBroadcastApp.NoActionBar"></activity>
+        <activity
+            android:name=".MapActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/Theme.WeatherBroadcastApp.NoActionBar"
-            >
+            android:theme="@style/Theme.WeatherBroadcastApp.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

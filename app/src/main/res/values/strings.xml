@@ -14,4 +14,12 @@
 
     <string name="n_degrees_c">"%d°C"</string>
     <string name="n_mph">"%dmph"</string>
+    <string name="title_activity_detailed_forecast">ScrollingActivity</string>
+    <string name="time_row">Time: </string>
+    <string name="type_row">Weather Type: </string>
+    <string name="precipitation_row">Precipitation: </string>
+    <string name="temperature_row">Temperature: </string>
+    <string name="uv_row">UV Index: </string>
+    <string name="wind_direction_row">Wind Direction: </string>
+    <string name="wind_speed_row">Wind Speed: </string>
 </resources>
