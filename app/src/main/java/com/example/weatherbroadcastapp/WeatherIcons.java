@@ -5,48 +5,47 @@ import com.example.lib.WeatherType;
 public class WeatherIcons {
     public static int getIconId(WeatherType weatherType) {
         switch(weatherType) {
-            case ClearNight:
+            case CLEAR_NIGHT:
                 return R.drawable.icon_moon;
-            case SunnyDay:
+            case SUNNY_DAY:
                 return R.drawable.icon_sun;
-            case PartlyCloudyNight:
+            case PARTLY_CLOUDY_NIGHT:
                 return R.drawable.icon_cloud_moon;
-            case PartlyCloudyDay:
+            case PARTLY_CLOUDY_DAY:
                 return R.drawable.icon_cloud_sun;
-            case Mist:
-            case Fog:
+            case MIST:
+            case FOG:
                 return R.drawable.icon_fog;
-            case Cloudy:
+            case CLOUDY:
                 return R.drawable.icon_cloud;
-            case Overcast:
+            case OVERCAST:
                 return R.drawable.icon_cloud;
-            case LightRainShowerNight:
+            case LIGHT_RAIN_SHOWER_NIGHT:
                 return R.drawable.icon_rain_moon;
-            case LightRainShowerDay:
+            case LIGHT_RAIN_SHOWER_DAY:
                 return R.drawable.icon_rain_sun;
-            case Drizzle:
-            case LightRain:
-            case HeavyRainShowerNight:
-            case HeavyRainShowerDay:
-            case HeavyRain:
+            case DRIZZLE:
+            case LIGHT_RAIN:
+            case HEAVY_RAIN_SHOWER_NIGHT:
+            case HEAVY_RAIN_SHOWER_DAY:
+            case HEAVY_RAIN:
                 return R.drawable.icon_rain;
-            case Sleet:
-            case SleetShowerNight:
-            case SleetShowerDay:
+            case SLEET:
+            case SLEET_SHOWER_NIGHT:
+            case SLEET_SHOWER_DAY:
                 return R.drawable.icon_sleet;
-            case HailShower:
-            case Hail:
+            case HAIL:
                 return R.drawable.icon_hail;
-            case LightSnowShowerNight:
-            case LightSnowShowerDay:
-            case LightSnow:
-            case HeavySnowShowerNight:
-            case HeavySnowShowerDay:
-            case HeavySnow:
+            case LIGHT_SNOW_SHOWER_NIGHT:
+            case LIGHT_SNOW_SHOWER_DAY:
+            case LIGHT_SNOW:
+            case HEAVY_SNOW_SHOWER_NIGHT:
+            case HEAVY_SNOW_SHOWER_DAY:
+            case HEAVY_SNOW:
                 return R.drawable.icon_snow;
-            case ThunderShowerNight:
-            case ThunderShowerDay:
-            case Thunder:
+            case THUNDER_SHOWER_NIGHT:
+            case THUNDER_SHOWER_DAY:
+            case THUNDER:
                 return R.drawable.icon_thunder;
         }
         return R.drawable.icon_cloud;
