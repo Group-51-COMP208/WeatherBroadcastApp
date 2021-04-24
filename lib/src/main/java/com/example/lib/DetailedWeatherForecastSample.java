@@ -8,6 +8,7 @@ public class DetailedWeatherForecastSample extends WeatherForecastSample {
     public float windSpeed_mph;
     public float temperature_celsius;
     public int uvIndex;
+    // As a percentage in the range 0-100
     public float precipitationProbability;
 
     @Override
