@@ -7,6 +7,8 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Calendar;
+import org.w3c.dom.*;
+
 
 /*
 * Note: There are many HTTP clients that we could use but
@@ -17,7 +19,9 @@ import java.util.Calendar;
 
 public class MetOfficeWeatherForecastService implements WeatherForecastService {
     MetOfficeWeatherForecastService() {
-
+        String apiKey = "474b382b-4970-4685-a1dd-8bffd071216b";
+        Document Day;
+        Document Hour;
     }
 
     /**
@@ -26,6 +30,13 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
     @Override
     public ArrayList<DetailedWeatherForecastSample> getDetailedForecast(Calendar start, Duration resolution, int numSamples, Location location) {
         // TODO: Please implement
+        // Forecast API
+        // URL detailData = new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/xml/352409?res=3hourly&key=474b382b-4970-4685-a1dd-8bffd071216b");
+        // Location API
+        // URL detailloc =  new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/sitelist?key=6cb4001b-cb25-4682-baf3-61a64918d89b");
+
+
+
         return null;
     }
 
@@ -35,6 +46,10 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
     @Override
     public ArrayList<SimpleWeatherForecastSample> getSimpleForecast(Calendar start, Duration resolution, int numSamples, Location location) {
         // TODO: Please implement
+        // Forecast API
+        // URL simpleData = new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/352409?res=daily&key=474b382b-4970-4685-a1dd-8bffd071216b");
+        // Location API
+        // URL simpleloc =  new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxobs/all/json/sitelist?key=6cb4001b-cb25-4682-baf3-61a64918d89b");
         return null;
     }
 
@@ -44,6 +59,8 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
     @Override
     public TextualForecast getLongTermForecast() {
         // TODO: Please implement
+        // API link
+       // URL longterm = new URL("http://datapoint.metoffice.gov.uk/public/data/txt/wxfcs/regionalforecast/json/500?key=6cb4001b-cb25-4682-baf3-61a64918d89b");
         return null;
     }
 
@@ -53,6 +70,8 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
     @Override
     public ArrayList<Location> getAvailableLocations() {
         // TODO: Please implement
+        // Location API
+        // URL detailloc =  new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/sitelist?key=6cb4001b-cb25-4682-baf3-61a64918d89b");
         return null;
     }
 
@@ -82,6 +101,9 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
 
         try {
             URL url = new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/sitelist?key=474b382b-4970-4685-a1dd-8bffd071216b");
+            URL detailData = new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/352409?res=3hourly&key=474b382b-4970-4685-a1dd-8bffd071216b");
+            URL simpleData = new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/352409?res=daily&key=474b382b-4970-4685-a1dd-8bffd071216b");
+
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             try {
                 InputStream in = new BufferedInputStream(urlConnection.getInputStream());

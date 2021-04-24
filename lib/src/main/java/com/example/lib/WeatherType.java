@@ -11,7 +11,7 @@ package com.example.lib;
 // but we may need to change this if it becomes apparent that there
 // is a good reason the Met Office makes this distinction.
 public enum WeatherType {
-    ClearNight,
+  /*  ClearNight,
     SunnyDay,
     PartlyCloudyNight,
     PartlyCloudyDay,
@@ -41,5 +41,49 @@ public enum WeatherType {
     HeavySnow,
     ThunderShowerNight,
     ThunderShowerDay,
-    Thunder
+    Thunder,
+*/
+    //May be it is better to create the code for weather type
+    //Met Office uses code in forecast xml files
+    NOT_AVAILABLE("NA"),
+    CLEAR_NIGHT("0"),
+    SUNNY_DAY("1"),
+    PARTLY_CLOUDY_NIGHT ("2"),
+    PARTLY_CLOUDY_DAY ("3"),
+    NOT_USED ("4"),
+    MIST ("5"),
+    FOG ("6"),
+    CLOUDY ("7"),
+    OVERCAST ("8"),
+    LIGHT_RAIN_SHOWER_NIGHT ("9"),
+    LIGHT_RAIN_SHOWER_DAY ("10"),
+    DRIZZLE ("11"),
+    LIGHT_RAIN ("12"),
+    HEAVY_RAIN_SHOWER_NIGHT ("13"),
+    HEAVY_RAIN_SHOWER_DAY ("14"),
+    HEAVY_RAIN ("15"),
+    SLEET_SHOWER_NIGHT ("16"),
+    SLEET_SHOWER_DAY ("17"),
+    SLEET ("18"),
+    HAIL_SHOWER_NIGHT ("19"),
+    HAIL_SHOWER_DAY ("20"),
+    HAIL ("21"),
+    LIGHT_SNOW_SHOWER_NIGHT ("22"),
+    LIGHT_SNOW_SHOWER_DAY ("23"),
+    LIGHT_SNOW ("24"),
+    HEAVY_SNOW_SHOWER_NIGHT ("25"),
+    HEAVY_SNOW_SHOWER_DAY ("26"),
+    HEAVY_SNOW ("27"),
+    THUNDER_SHOWER_NIGHT ("28"),
+    THUNDER_SHOWER_DAY ("29"),
+    THUNDER ("30"),;
+
+    private String weatherCode;
+    private WeatherType(final String code){
+        this.weatherCode = code;
+    }
+
+    public String getCode() {
+        return weatherCode;
+    }
 }
