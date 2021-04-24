@@ -86,8 +86,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         DetailedWeatherForecastSample sample = Services.get().getWeatherForecastService().getDetailedForecast(Calendar.getInstance(),
                                             Duration.ofHours(1), 1, currentLocation).get(0);
         textView_currentTemperature.setText(String.format(getString(R.string.n_degrees_c), (int)sample.temperature_celsius));
-        textView_currentWindSpeed.setText(String.format(getString(R.string.n_mph), (int) sample.windSpeed_mph));
+        textView_currentWindSpeed.setText(String.valueOf((int)sample.windSpeed_mph));
         imageView_weatherIcon.setImageResource(WeatherIcons.getIconId(sample.weatherType));
+
+        imageView_currentWindDirection.setRotation(sample.windDirection_degrees);
     }
 
     private Location currentLocation = null;

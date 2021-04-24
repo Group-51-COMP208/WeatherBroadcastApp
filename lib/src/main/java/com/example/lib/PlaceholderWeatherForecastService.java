@@ -19,10 +19,10 @@ public class PlaceholderWeatherForecastService implements WeatherForecastService
             sample.timeStamp.add(Calendar.MINUTE, (int) resolution.toMinutes() * i);
             sample.location = location;
             sample.precipitationProbability = i * 0.05f;
-            sample.temperature_celsius = i;
+            sample.temperature_celsius = i + 10;
             sample.uvIndex = i;
-            sample.windDirection_degrees = i * 15;
-            sample.windSpeed_mph = i;
+            sample.windDirection_degrees = i * 15 + 45;
+            sample.windSpeed_mph = i + 10;
             // Just cycling through the weather types for testing purposes
             sample.weatherType = WeatherType.values()[i % WeatherType.values().length];
             samples.add(sample);
