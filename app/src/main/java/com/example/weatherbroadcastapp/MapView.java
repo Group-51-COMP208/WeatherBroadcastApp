@@ -41,7 +41,7 @@ public class MapView extends View {
     private static final double MAP_NORTHMOST_LATITUDE = 60.86;
     private static final double MAP_SOUTHMOST_LATITUDE = 49.86;
 
-    private static final int ICON_DRAW_SIZE         = 100;
+    private static final int ICON_DRAW_SIZE = 100;
 
     private ArrayList<Location> significantLocations;
     private Calendar startTime;
