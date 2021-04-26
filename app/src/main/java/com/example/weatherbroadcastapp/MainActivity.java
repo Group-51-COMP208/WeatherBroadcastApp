@@ -6,11 +6,9 @@ import android.os.Bundle;
 import com.example.lib.DetailedWeatherForecastSample;
 import com.example.lib.Location;
 import com.example.lib.Services;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
+import com.example.lib.SimpleWeatherForecastSample;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import android.view.View;
 
@@ -21,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -36,6 +33,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Button detailedForecastButton = findViewById(R.id.button_detailedForcast);
         detailedForecastButton.setOnClickListener(this);
+
+        Button simpleForecastButton = findViewById(R.id.button_toSimpleForecast);
+        simpleForecastButton.setOnClickListener(this);
 
         for(Location location: Services.get().getWeatherForecastService().getAvailableLocations()) {
             System.out.println(location.getDisplayName());
@@ -77,8 +77,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         else if(v.getId() == R.id.button_detailedForcast) {
             Intent detailedForecastIntent = new Intent(this, DetailedForecastActivity.class);
-
             startActivity(detailedForecastIntent);
+        }
+        else if(v.getId() == R.id.button_toSimpleForecast) {
+            Intent simpleForecastIntent = new Intent(this, SimpleForecastActivity.class);
+            startActivity(simpleForecastIntent);
         }
     }
 

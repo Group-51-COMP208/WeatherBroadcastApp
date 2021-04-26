@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class DetailedForecastActivity extends AppCompatActivity {
+    final private static int resolutionInHours = 1;
+    final private static int numSamples = 24 * 3 / resolutionInHours;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +81,7 @@ public class DetailedForecastActivity extends AppCompatActivity {
 
         Location location = Services.get().getFavouriteLocationService().getSelectedLocation();
         ArrayList<DetailedWeatherForecastSample> samples = Services.get().getWeatherForecastService().getDetailedForecast(Calendar.getInstance(),
-                Duration.ofHours(1), 24 * 3, location);
+                Duration.ofHours(resolutionInHours), numSamples, location);
 
 
         for(DetailedWeatherForecastSample sample: samples) {

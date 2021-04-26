@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000"
-    android:backgroundTint="#DABE0B"
+    android:backgroundTint="@color/background"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -136,7 +136,7 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/button_toMediumTermForecast"
+            android:id="@+id/button_toSimpleForecast"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
