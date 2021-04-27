@@ -15,4 +15,19 @@
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/white</item>
     </style>
+
+    <style name="big_heading" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="medium_heading" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="paragraph_body" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
 </resources>

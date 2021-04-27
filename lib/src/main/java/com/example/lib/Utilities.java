@@ -15,6 +15,12 @@ public class Utilities {
         return newTime;
     }
 
+    // Returns a new Calendar with time equal to startTime + period
+    public static Calendar addTime(Calendar startTime, Duration period) {
+        return addTime(startTime, period, 1);
+    }
+
+
     // Finds the closest location in the given array to the specified latitude and longitude
     // Uses Euclidian distance.
     public static Location findClosestLocation(ArrayList<Location> locations,

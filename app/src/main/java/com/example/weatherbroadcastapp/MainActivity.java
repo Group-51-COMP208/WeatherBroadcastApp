@@ -46,6 +46,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button simpleForecastButton = findViewById(R.id.button_toSimpleForecast);
         simpleForecastButton.setOnClickListener(this);
 
+        Button longTermForecastButton = findViewById(R.id.button_toLongTermForecast);
+        longTermForecastButton.setOnClickListener(this);
+
         weatherService  = Services.get().getWeatherForecastService();
         locationService = Services.get().getLocationService();
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
@@ -71,7 +74,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else {
             setLocationToActual();
         }
-
     }
 
 
@@ -144,6 +146,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else if(v.getId() == R.id.button_toSimpleForecast) {
             Intent simpleForecastIntent = new Intent(this, SimpleForecastActivity.class);
             startActivity(simpleForecastIntent);
+        }
+        else if(v.getId() == R.id.button_toLongTermForecast) {
+            Intent longTermForecastIntent = new Intent(this, LongTermForecastActivity.class);
+            startActivity(longTermForecastIntent);
         }
     }
 
