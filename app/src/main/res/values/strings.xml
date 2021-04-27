@@ -26,4 +26,6 @@
     <string name="button_long_term_forecast"><![CDATA[Long term forecast >]]></string>
     <string name="heading_long_term_forecast">UK Long Term Forecast</string>
     <string name="time_period">"%s to %s"</string>
+
+    <string name="unrecognized_location_msg">"Sorry, location %s is not recognized"</string>
 </resources>

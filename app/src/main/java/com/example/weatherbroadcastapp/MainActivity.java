@@ -1,6 +1,7 @@
 package com.example.weatherbroadcastapp;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -20,18 +21,26 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import android.view.KeyEvent;
 import android.view.View;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Calendar;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, TextView.OnEditorActionListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,13 +58,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button longTermForecastButton = findViewById(R.id.button_toLongTermForecast);
         longTermForecastButton.setOnClickListener(this);
 
+
         weatherService  = Services.get().getWeatherForecastService();
         locationService = Services.get().getLocationService();
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         
         for(Location location: weatherService.getAvailableLocations()) {
-            System.out.println(location.getDisplayName());
+            recognizedLocations.add(location.getDisplayName());
         }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_dropdown_item_1line, recognizedLocations);
+        AutoCompleteTextView locationSearch = findViewById(R.id.autoCompleteTextView_location);
+        locationSearch.setAdapter(adapter);
+        locationSearch.setOnEditorActionListener(this);
 
         initializeLocation();
         updateWeatherInfo();
@@ -171,7 +187,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         imageView_currentWindDirection.setRotation(sample.windDirection_degrees);
     }
 
+
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        if (actionId == EditorInfo.IME_ACTION_DONE) {
+            Location selectedLocation = weatherService.getLocationByName(v.getText().toString());
+            if(selectedLocation != null) {
+                locationService.setSelectedLocation(selectedLocation);
+                InputMethodManager imm = (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                updateWeatherInfo();
+            }
+            else {
+                Toast.makeText(MainActivity.this,
+                        String.format(getString(R.string.unrecognized_location_msg) , v.getText()),
+                        Toast.LENGTH_SHORT).show();
+            }
+
+            return true;
+        }
+        return false;
+    }
+
     private FusedLocationProviderClient fusedLocationProviderClient;
     private WeatherForecastService weatherService;
     private LocationService locationService;
+    private ArrayList<String> recognizedLocations = new ArrayList<String>();
 }
