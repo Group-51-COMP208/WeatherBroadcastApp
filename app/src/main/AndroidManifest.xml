@@ -3,6 +3,7 @@
     package="com.example.weatherbroadcastapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -11,10 +12,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.WeatherBroadcastApp">
+
         <activity
             android:name=".SimpleForecastActivity"
-            android:theme="@style/Theme.WeatherBroadcastApp.NoActionBar">
-        </activity>
+            android:theme="@style/Theme.WeatherBroadcastApp.NoActionBar"></activity>
         <activity
             android:name=".DetailedForecastActivity"
             android:label="@string/title_activity_detailed_forecast"
