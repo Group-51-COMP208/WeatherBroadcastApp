@@ -79,7 +79,7 @@ public class DetailedForecastActivity extends AppCompatActivity {
         label.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_END);
         windSpeedRow.addView(label);
 
-        Location location = Services.get().getFavouriteLocationService().getSelectedLocation();
+        Location location = Services.get().getLocationService().getSelectedLocation();
         ArrayList<DetailedWeatherForecastSample> samples = Services.get().getWeatherForecastService().getDetailedForecast(Calendar.getInstance(),
                 Duration.ofHours(resolutionInHours), numSamples, location);
 

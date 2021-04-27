@@ -1,7 +1,7 @@
 package com.example.lib;
 
-public class PlaceholderFavouriteLocationService implements FavouriteLocationService {
-    PlaceholderFavouriteLocationService() {
+public class PlaceholderLocationService implements LocationService {
+    PlaceholderLocationService() {
         setSelectedLocation(getFavouriteLocation());
     }
 

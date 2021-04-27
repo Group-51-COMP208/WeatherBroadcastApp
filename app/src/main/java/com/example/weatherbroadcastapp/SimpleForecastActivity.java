@@ -11,7 +11,6 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.example.lib.DetailedWeatherForecastSample;
 import com.example.lib.Location;
 import com.example.lib.Services;
 import com.example.lib.SimpleWeatherForecastSample;
@@ -30,7 +29,7 @@ public class SimpleForecastActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_simple_forecast);
 
-        Location location = Services.get().getFavouriteLocationService().getSelectedLocation();
+        Location location = Services.get().getLocationService().getSelectedLocation();
         ArrayList<SimpleWeatherForecastSample> samples = Services.get().getWeatherForecastService().getSimpleForecast(Calendar.getInstance(),
                 Duration.ofHours(1), 24 * 3, location);
 

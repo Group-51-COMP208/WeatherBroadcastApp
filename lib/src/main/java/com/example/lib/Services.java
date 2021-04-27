@@ -11,8 +11,8 @@ public class Services {
         return weatherForecastService;
     }
 
-    public FavouriteLocationService getFavouriteLocationService() {
-        return favouriteLocationService;
+    public LocationService getLocationService() {
+        return locationService;
     }
 
     public static Services get() {
@@ -31,11 +31,11 @@ public class Services {
         // Placeholder. TODO: Switch to real implementation once it is sufficiently complete
         weatherForecastService = new PlaceholderWeatherForecastService();
         // Placeholder. TODO: Switch to real implementation once it is sufficiently complete
-        favouriteLocationService = new PlaceholderFavouriteLocationService();
+        locationService = new PlaceholderLocationService();
     }
 
     private static Services instance = null;
 
     WeatherForecastService weatherForecastService;
-    FavouriteLocationService favouriteLocationService;
+    LocationService locationService;
 }

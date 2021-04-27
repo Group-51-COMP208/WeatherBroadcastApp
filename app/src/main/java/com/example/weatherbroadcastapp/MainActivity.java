@@ -6,7 +6,6 @@ import android.os.Bundle;
 import com.example.lib.DetailedWeatherForecastSample;
 import com.example.lib.Location;
 import com.example.lib.Services;
-import com.example.lib.SimpleWeatherForecastSample;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -42,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         // TODO: get user's actual current location if possible, as a default?
-        currentLocation = Services.get().getFavouriteLocationService().getSelectedLocation();
+        currentLocation = Services.get().getLocationService().getSelectedLocation();
         updateWeatherInfo();
     }
 
