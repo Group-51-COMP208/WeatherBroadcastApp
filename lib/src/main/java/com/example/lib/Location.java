@@ -10,6 +10,13 @@ public class Location {
         this.longitude = longitude;
     }
 
+    @Override
+    public String toString() {
+        return "{" + displayName + ". " + apiId + ", "
+                + String.valueOf(latitude) + ", " + String.valueOf(longitude)
+                + "}";
+    }
+
     public String getDisplayName() {
         return displayName;
     }
