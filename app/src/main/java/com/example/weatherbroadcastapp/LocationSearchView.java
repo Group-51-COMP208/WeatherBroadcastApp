@@ -27,8 +27,10 @@ public class LocationSearchView extends androidx.appcompat.widget.AppCompatAutoC
 
     @Override
     protected void onFocusChanged (boolean focused, int direction, Rect previouslyFocusedRect) {
-        if(focused)
-            performFiltering("", 0);
         super.onFocusChanged(focused, direction, previouslyFocusedRect);
+        if(focused) {
+            performFiltering("", 0);
+            showDropDown();
+        }
     }
 }

@@ -68,12 +68,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         ArrayAdapter<String> adapter = new AutoCompleteFavouriteLocationAdapter(this,
                 android.R.layout.simple_dropdown_item_1line, recognizedLocations);
-        AutoCompleteTextView locationSearch = findViewById(R.id.autoCompleteTextView_location);
-        locationSearch.setAdapter(adapter);
-        locationSearch.setOnEditorActionListener(this);
+
+        locationSearchView = findViewById(R.id.autoCompleteTextView_location);
+        locationSearchView.setAdapter(adapter);
+        locationSearchView.setOnEditorActionListener(this);
 
         initializeLocation();
         updateWeatherInfo();
+    }
+
+    @Override
+    protected void onStop () {
+        super.onStop();
+        locationSearchView.clearFocus();
     }
 
     private void initializeLocation() {
@@ -195,6 +202,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 locationService.setSelectedLocation(selectedLocation);
                 InputMethodManager imm = (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                v.clearFocus();
                 updateWeatherInfo();
             }
             else {
@@ -212,4 +220,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private WeatherForecastService weatherService;
     private LocationService locationService;
     private ArrayList<String> recognizedLocations = new ArrayList<String>();
+    private AutoCompleteTextView locationSearchView;
 }
