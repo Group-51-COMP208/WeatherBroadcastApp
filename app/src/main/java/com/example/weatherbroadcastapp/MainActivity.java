@@ -58,7 +58,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button longTermForecastButton = findViewById(R.id.button_toLongTermForecast);
         longTermForecastButton.setOnClickListener(this);
 
-
         weatherService  = Services.get().getWeatherForecastService();
         locationService = Services.get().getLocationService();
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
@@ -67,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             recognizedLocations.add(location.getDisplayName());
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+        ArrayAdapter<String> adapter = new AutoCompleteFavouriteLocationAdapter(this,
                 android.R.layout.simple_dropdown_item_1line, recognizedLocations);
         AutoCompleteTextView locationSearch = findViewById(R.id.autoCompleteTextView_location);
         locationSearch.setAdapter(adapter);

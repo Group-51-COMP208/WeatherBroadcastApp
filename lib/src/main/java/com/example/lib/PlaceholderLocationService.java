@@ -1,8 +1,12 @@
 package com.example.lib;
 
+import java.util.ArrayList;
+
 public class PlaceholderLocationService implements LocationService {
     PlaceholderLocationService() {
         setSelectedLocation(getFavouriteLocation());
+        favLocs.add(new Location("Liverpool", "?", 53.4f, -2.99f));
+        favLocs.add(new Location("Manchester", "?", 53.4f, -1.99f));
     }
 
     @Override
@@ -26,5 +30,16 @@ public class PlaceholderLocationService implements LocationService {
         selectedLocation = location;
     }
 
+    @Override
+    public void registerLocationUsage(Location location) {
+        System.out.println("TODO: implement registerLocationUsage for LocationService");
+    }
+
+    @Override
+    public ArrayList<Location> getFavouriteLocations() {
+        return favLocs;
+    }
+
     private Location selectedLocation;
+    private ArrayList<Location> favLocs = new ArrayList<Location>();
 }
