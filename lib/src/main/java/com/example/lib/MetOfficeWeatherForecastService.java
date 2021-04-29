@@ -1,9 +1,8 @@
 package com.example.lib;
-import java.io.BufferedInputStream;
 import java.io.InputStream;
+import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -15,6 +14,7 @@ import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map.Entry;
 import java.io.BufferedReader;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -77,11 +77,45 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
      */
     @Override
     public ArrayList<Location> getAvailableLocations() {
-        // TODO: Please implement
-        // Location API
-        // URL detailloc =  new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/sitelist?key=6cb4001b-cb25-4682-baf3-61a64918d89b");
-      
-        return null;
+        if(locationCache == null) {
+            try {
+                locationCache = new ArrayList<Location>();
+                URL locUrl = new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/sitelist?key=" + apiKey);
+                HttpURLConnection connection = (HttpURLConnection) locUrl.openConnection();
+                try {
+                    Reader reader = new InputStreamReader(connection.getInputStream());
+                    JSONParser parser = new JSONParser();
+                    JSONObject obj = (JSONObject) parser.parse(reader);
+
+                    JSONObject location = (JSONObject) obj.get("Locations");
+                    JSONArray locations = (JSONArray) location.get("Location");
+                    for(Object o: locations) {
+                        JSONObject jobj        = (JSONObject) o;
+                        String name            = (String) jobj.get("name");
+                        String id              = (String) jobj.get("id");
+                        String latitudeString  = (String) jobj.get("latitude");
+                        String longitudeString = (String) jobj.get("longitude");
+                        float latitude         = Float.parseFloat(latitudeString);
+                        float longitude        = Float.parseFloat(longitudeString);
+
+                        locationCache.add(new Location(
+                            name,
+                            id,
+                            latitude,
+                            longitude
+                        ));
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                finally {
+                    connection.disconnect();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return locationCache;
     }
 
     /**
@@ -96,7 +130,7 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
 
         String url = "http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/sitelist";
         String charset = "UTF-8";
-        String param1 = api_key;
+        String param1 = apiKey;
         ArrayList<String> ids = new ArrayList<String>();
         try {
             String query = String.format("key=%s",
@@ -138,7 +172,7 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
 
     // This API key is from an account created by Jonathan Wood
     // (J.M.Wood2@student.liverpool.ac.uk)
-    private final String api_key = "474b382b-4970-4685-a1dd-8bffd071216b";
+    private final String apiKey = "474b382b-4970-4685-a1dd-8bffd071216b";
 
 
     // You can run this method using the green 'run' arrow in the bar on the left
@@ -146,27 +180,10 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
     public static void main(String[] args) {
         // I suggest we use this to try out API calls
         MetOfficeWeatherForecastService ws = new MetOfficeWeatherForecastService();
-        System.out.println("You can see this output in the 'run' tab at the bottom");
-        ArrayList<String> ids = new ArrayList<String>();
-
-        try {
-            URL url = new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/sitelist?key=474b382b-4970-4685-a1dd-8bffd071216b");
-            URL detailData = new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/352409?res=3hourly&key=474b382b-4970-4685-a1dd-8bffd071216b");
-            URL simpleData = new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/352409?res=daily&key=474b382b-4970-4685-a1dd-8bffd071216b");
-
-            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-            try {
-                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-                byte[] bytes = new byte[1000000];
-                in.read(bytes);
-                String s = new String(bytes, StandardCharsets.UTF_8);
-                System.out.println(s);
-            } finally {
-                urlConnection.disconnect();
-            }
-        }
-        catch(Exception e) {
-            System.out.println(e);
+        for(Location location: ws.getAvailableLocations()) {
+            System.out.println(location);
         }
     }
+
+    private ArrayList<Location> locationCache;
 }
