@@ -43,8 +43,6 @@ public enum WeatherType {
     ThunderShowerDay,
     Thunder,
 */
-    //May be it is better to create the code for weather type
-    //Met Office uses code in forecast xml files
     NOT_AVAILABLE("NA"),
     CLEAR_NIGHT("0"),
     SUNNY_DAY("1"),

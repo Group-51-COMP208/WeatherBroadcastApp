@@ -8,7 +8,17 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Calendar;
 import org.w3c.dom.*;
-
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.util.List;
+import java.util.Map.Entry;
+import java.io.BufferedReader;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 /*
 * Note: There are many HTTP clients that we could use but
@@ -19,9 +29,10 @@ import org.w3c.dom.*;
 
 public class MetOfficeWeatherForecastService implements WeatherForecastService {
     MetOfficeWeatherForecastService() {
-        String apiKey = "474b382b-4970-4685-a1dd-8bffd071216b";
+        String api_key = "474b382b-4970-4685-a1dd-8bffd071216b";
         Document Day;
         Document Hour;
+        ArrayList<String> ids = new ArrayList<String>();
     }
 
     /**
@@ -34,9 +45,6 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
         // URL detailData = new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/xml/352409?res=3hourly&key=474b382b-4970-4685-a1dd-8bffd071216b");
         // Location API
         // URL detailloc =  new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/sitelist?key=6cb4001b-cb25-4682-baf3-61a64918d89b");
-
-
-
         return null;
     }
 
@@ -63,7 +71,7 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
        // URL longterm = new URL("http://datapoint.metoffice.gov.uk/public/data/txt/wxfcs/regionalforecast/json/500?key=6cb4001b-cb25-4682-baf3-61a64918d89b");
         return null;
     }
-
+    
     /**
      * @see WeatherForecastService
      */
@@ -72,23 +80,65 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
         // TODO: Please implement
         // Location API
         // URL detailloc =  new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/sitelist?key=6cb4001b-cb25-4682-baf3-61a64918d89b");
+      
         return null;
     }
 
     /**
      * @see WeatherForecastService
+     * @return
      */
     @Override
     public Location getLocationByName(String displayName) {
         // TODO: Implement after getAvailableLocations
         // I suggest some sort of caching of the available locations
         // to reduce calls to the API
+
+        String url = "http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/sitelist";
+        String charset = "UTF-8";
+        String param1 = api_key;
+        ArrayList<String> ids = new ArrayList<String>();
+        try {
+            String query = String.format("key=%s",
+                    URLEncoder.encode(param1, charset));
+            //URLEncoder.encode(param2, charset));
+
+            URLConnection connection = new URL(url + "?" + query).openConnection();
+            connection.setRequestProperty("Accept-Charset", charset);
+            InputStream response = connection.getInputStream();
+
+            HttpURLConnection conn = (HttpURLConnection)connection;
+            int status = conn.getResponseCode();
+            for (Entry<String, List<String>> header : connection.getHeaderFields().entrySet()) {
+
+            }
+            BufferedReader reader = new BufferedReader(new InputStreamReader(response, charset));
+            String json = reader.readLine();
+
+            JSONParser parser = new JSONParser();
+            Object resultObject = parser.parse(json);
+
+            JSONObject obj =(JSONObject)resultObject;
+            JSONObject locs =(JSONObject)obj.get("Locations");
+            JSONArray loc = (JSONArray)locs.get("Location");
+
+
+            for (int i=0;i<loc.size();i++) {
+                JSONObject location = (JSONObject)loc.get(i);
+                String id = (String)location.get("id");
+                ids.add(displayName);
+            }
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
+         //return displayName;
+
         return null;
     }
 
     // This API key is from an account created by Jonathan Wood
     // (J.M.Wood2@student.liverpool.ac.uk)
-    private final String apiKey = "474b382b-4970-4685-a1dd-8bffd071216b";
+    private final String api_key = "474b382b-4970-4685-a1dd-8bffd071216b";
 
 
     // You can run this method using the green 'run' arrow in the bar on the left
@@ -97,7 +147,7 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
         // I suggest we use this to try out API calls
         MetOfficeWeatherForecastService ws = new MetOfficeWeatherForecastService();
         System.out.println("You can see this output in the 'run' tab at the bottom");
-
+        ArrayList<String> ids = new ArrayList<String>();
 
         try {
             URL url = new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/sitelist?key=474b382b-4970-4685-a1dd-8bffd071216b");

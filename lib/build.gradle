@@ -6,3 +6,8 @@ java {
     sourceCompatibility = JavaVersion.VERSION_1_7
     targetCompatibility = JavaVersion.VERSION_1_7
 }
+
+dependencies {
+    implementation files('org.json-20161124.jar')
+    implementation files('json-simple-1.1.jar')
+}
