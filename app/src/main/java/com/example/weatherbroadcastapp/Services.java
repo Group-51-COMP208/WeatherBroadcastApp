@@ -1,4 +1,8 @@
-package com.example.lib;
+package com.example.weatherbroadcastapp;
+
+import com.example.lib.LocationService;
+import com.example.lib.PlaceholderWeatherForecastService;
+import com.example.lib.WeatherForecastService;
 
 /*
 * A Singleton class, the purpose of which is to make available
@@ -30,8 +34,7 @@ public class Services {
     private Services() {
         // Placeholder. TODO: Switch to real implementation once it is sufficiently complete
         weatherForecastService = new PlaceholderWeatherForecastService();
-        // Placeholder. TODO: Switch to real implementation once it is sufficiently complete
-        locationService = new PlaceholderLocationService();
+        locationService = new SharedPreferencesLocationService();
     }
 
     private static Services instance = null;

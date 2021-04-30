@@ -6,8 +6,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.PorterDuff;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
 import android.util.AttributeSet;
@@ -17,7 +15,6 @@ import androidx.core.content.ContextCompat;
 
 import com.example.lib.DetailedWeatherForecastSample;
 import com.example.lib.Location;
-import com.example.lib.Services;
 import com.example.lib.Utilities;
 import com.example.lib.WeatherForecastService;
 

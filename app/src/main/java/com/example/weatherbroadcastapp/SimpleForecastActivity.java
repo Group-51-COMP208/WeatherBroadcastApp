@@ -12,7 +12,6 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.example.lib.Location;
-import com.example.lib.Services;
 import com.example.lib.SimpleWeatherForecastSample;
 
 import java.text.SimpleDateFormat;

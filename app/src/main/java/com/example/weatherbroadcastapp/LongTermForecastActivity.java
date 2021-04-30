@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import com.example.lib.Services;
 import com.example.lib.TextualForecast;
 import com.example.lib.Utilities;
 

@@ -9,7 +9,6 @@ import android.os.Bundle;
 import com.example.lib.DetailedWeatherForecastSample;
 import com.example.lib.Location;
 import com.example.lib.LocationService;
-import com.example.lib.Services;
 import com.example.lib.Utilities;
 import com.example.lib.WeatherForecastService;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -28,7 +27,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -204,6 +202,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 v.clearFocus();
                 updateWeatherInfo();
+                locationService.registerLocationUsage(selectedLocation.getDisplayName());
             }
             else {
                 Toast.makeText(MainActivity.this,

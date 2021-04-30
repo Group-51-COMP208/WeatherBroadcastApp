@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.example.lib.DetailedWeatherForecastSample;
 import com.example.lib.Location;
-import com.example.lib.Services;
 
 import java.text.SimpleDateFormat;
 import java.time.Duration;

@@ -3,17 +3,12 @@ package com.example.weatherbroadcastapp;
 import android.content.Context;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
-import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
-import android.view.ViewGroup;
-import android.view.LayoutInflater;
 
 import com.example.lib.Location;
 import com.example.lib.LocationService;
-import com.example.lib.Services;
-import com.example.lib.WeatherForecastService;
 
 // Custom ArrayAdaptor which works exactly like ArrayAdapter<String> except
 // that it uses a custom filter to return the user's favourite locations before
@@ -32,9 +27,9 @@ public class AutoCompleteFavouriteLocationAdapter extends ArrayAdapter<String> {
     }
 
     void init(List<String> locations) {
-        LocationService locationService = Services.get().getLocationService();
-        for(Location l: locationService.getFavouriteLocations()) {
-            favouriteLocations.add(l.getDisplayName());
+        locationService = Services.get().getLocationService();
+        for(String l: locationService.getFavouriteLocations()) {
+            favouriteLocations.add(l);
         }
 
         allLocations = locations;
@@ -55,7 +50,7 @@ public class AutoCompleteFavouriteLocationAdapter extends ArrayAdapter<String> {
 
             if (prefix == null || prefix.length() == 0) {
                 // User hasn't typed anything yet. Suggest favourites.
-                suggestions.addAll(favouriteLocations);
+                locationService.getFavouriteLocations().forEach(suggestions::add);
             } else {
                 final String prefixString = prefix.toString().toLowerCase();
                 System.out.println("locations.length(): " + allLocations.size());
@@ -94,6 +89,7 @@ public class AutoCompleteFavouriteLocationAdapter extends ArrayAdapter<String> {
 
     private final Filter filter = new CustomFilter();
     private ArrayList<String> favouriteLocations = new ArrayList<String>();
+    private LocationService locationService;
     private List<String> filteredLocations;
     private List<String> allLocations;
 }
