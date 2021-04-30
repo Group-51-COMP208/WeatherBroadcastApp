@@ -1,10 +1,12 @@
 package com.example.lib;
 
-public class Location {
-    Location(String displayName, String apiId,
+import java.util.ArrayList;
+
+public class Location extends ArrayList<String> {
+    Location(String names, String apiId,
              float latitude, float longitude)
     {
-        this.displayName = displayName;
+        this.names = names;
         this.apiId = apiId;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -12,13 +14,13 @@ public class Location {
 
     @Override
     public String toString() {
-        return "{" + displayName + ". " + apiId + ", "
+        return "{" + names + ". " + apiId + ", "
                 + String.valueOf(latitude) + ", " + String.valueOf(longitude)
                 + "}";
     }
 
     public String getDisplayName() {
-        return displayName;
+        return names;
     }
 
     public String getApiId() {
@@ -36,7 +38,7 @@ public class Location {
 
     // I don't see any reason that any of these should change
     // for a given location, hence final.
-    final private String displayName;
+    final private String names;
     final private String apiId;
     final private float latitude;
     final private float longitude;

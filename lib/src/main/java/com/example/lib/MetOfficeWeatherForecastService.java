@@ -42,7 +42,7 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
     public ArrayList<DetailedWeatherForecastSample> getDetailedForecast(Calendar start, Duration resolution, int numSamples, Location location) {
         // TODO: Please implement
         // Forecast API
-        // URL detailData = new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/xml/352409?res=3hourly&key=474b382b-4970-4685-a1dd-8bffd071216b");
+        // URL detailData = new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/352409?res=3hourly&key=474b382b-4970-4685-a1dd-8bffd071216b");
         // Location API
         // URL detailloc =  new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/sitelist?key=6cb4001b-cb25-4682-baf3-61a64918d89b");
         return null;
@@ -52,13 +52,56 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
      * @see WeatherForecastService
      */
     @Override
-    public ArrayList<SimpleWeatherForecastSample> getSimpleForecast(Calendar start, Duration resolution, int numSamples, Location location) {
+    public ArrayList<SimpleWeatherForecastSample> getSimpleForecast(Calendar start,/* Duration resolution,*/ int numSamples, Location location) {
         // TODO: Please implement
         // Forecast API
         // URL simpleData = new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/352409?res=daily&key=474b382b-4970-4685-a1dd-8bffd071216b");
         // Location API
         // URL simpleloc =  new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxobs/all/json/sitelist?key=6cb4001b-cb25-4682-baf3-61a64918d89b");
-        return null;
+        if(simpleforecast == null) {
+            try {
+                simpleforecast = new ArrayList<SimpleWeatherForecastSample>();
+                URL locUrl = new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/352409?res=daily&key=" + apiKey);
+                HttpURLConnection connection = (HttpURLConnection) locUrl.openConnection();
+                try {
+                    Reader reader = new InputStreamReader(connection.getInputStream());
+                    JSONParser parser = new JSONParser();
+                    JSONObject obj = (JSONObject) parser.parse(reader);
+
+                    JSONObject forecast = (JSONObject) obj.get("Forecasts");
+                    JSONArray forecasts = (JSONArray) forecast.get("Forecast");
+                    for(Object o: forecasts) {
+                        JSONObject jobj        = (JSONObject) o;
+                        Calendar timeStamp    = (Calendar) jobj.get("timeStamp");
+                        //String weatherType  = (String) jobj.get("weatherType");
+
+                        for(int i = 0; i < numSamples; ++i) {
+                         //   ArrayList<String> data = new ArrayList<>();
+                            JSONObject simpleforecast = (JSONObject)forecast.get(i);
+                            String loc = location.getDisplayName();
+                           // data.add(loc);
+                        }
+                        Location loc =(Location) jobj.get("location");
+                     //   simpleforecast.add(data);
+                        simpleforecast.add(new SimpleWeatherForecastSample(
+                                timeStamp,
+                                numSamples,
+                                loc
+                        ));
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                finally {
+                    connection.disconnect();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return simpleforecast;
+
+       // return null;
     }
 
     /**
@@ -123,7 +166,7 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
      * @return
      */
     @Override
-    public Location getLocationByName(String displayName) {
+    public ArrayList<String> getLocationByName(String displayName) {
         // TODO: Implement after getAvailableLocations
         // I suggest some sort of caching of the available locations
         // to reduce calls to the API
@@ -131,7 +174,7 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
         String url = "http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/sitelist";
         String charset = "UTF-8";
         String param1 = apiKey;
-        ArrayList<String> ids = new ArrayList<String>();
+        ArrayList<String> names = new ArrayList<String>();
         try {
             String query = String.format("key=%s",
                     URLEncoder.encode(param1, charset));
@@ -153,21 +196,21 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
             Object resultObject = parser.parse(json);
 
             JSONObject obj =(JSONObject)resultObject;
-            JSONObject locs =(JSONObject)obj.get("Locations");
-            JSONArray loc = (JSONArray)locs.get("Location");
+            JSONObject locs = (JSONObject) obj.get("Locations");
+            JSONArray loc = (JSONArray) locs.get("Location");
 
 
             for (int i=0;i<loc.size();i++) {
                 JSONObject location = (JSONObject)loc.get(i);
-                String id = (String)location.get("id");
-                ids.add(displayName);
+                displayName = (String)location.get("displayName");
+                names.add(displayName);
             }
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
-         //return displayName;
+        return names;
 
-        return null;
+       // return null;
     }
 
     // This API key is from an account created by Jonathan Wood
@@ -183,7 +226,11 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
         for(Location location: ws.getAvailableLocations()) {
             System.out.println(location);
         }
+      /*  for(SimpleWeatherForecastSample forecast: ws.getSimpleForecast()) {
+            System.out.println(forecast);
+        }*/
     }
 
     private ArrayList<Location> locationCache;
+    private ArrayList<SimpleWeatherForecastSample> simpleforecast;
 }
