@@ -31,12 +31,12 @@ public class PlaceholderWeatherForecastService implements WeatherForecastService
     }
 
     @Override
-    public ArrayList<SimpleWeatherForecastSample> getSimpleForecast(Calendar start,/* Duration resolution,*/ int numSamples, Location location) {
+    public ArrayList<SimpleWeatherForecastSample> getSimpleForecast(Calendar start, Duration resolution, int numSamples, Location location) {
         ArrayList<SimpleWeatherForecastSample> samples = new ArrayList<SimpleWeatherForecastSample>();
         for(int i = 0; i < numSamples; ++i) {
             SimpleWeatherForecastSample sample = new SimpleWeatherForecastSample(start,numSamples,location);
             sample.timeStamp = (Calendar) start.clone();
-           // sample.timeStamp.add(Calendar.MINUTE, (int) resolution.toMinutes() * i);
+            sample.timeStamp.add(Calendar.MINUTE, (int) resolution.toMinutes() * i);
             sample.location = location;
             // Just cycling through the weather types for testing purposes
             sample.weatherType = WeatherType.values()[i % WeatherType.values().length];
