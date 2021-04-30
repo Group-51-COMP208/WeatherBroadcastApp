@@ -58,7 +58,7 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
         // URL simpleData = new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/352409?res=daily&key=474b382b-4970-4685-a1dd-8bffd071216b");
         // Location API
         // URL simpleloc =  new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxobs/all/json/sitelist?key=6cb4001b-cb25-4682-baf3-61a64918d89b");
-        if(simpleforecast == null) {
+        if (simpleforecast == null) {
             try {
                 simpleforecast = new ArrayList<SimpleWeatherForecastSample>();
                 URL locUrl = new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/352409?res=daily&key=" + apiKey);
@@ -70,19 +70,19 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
 
                     JSONObject forecast = (JSONObject) obj.get("Forecasts");
                     JSONArray forecasts = (JSONArray) forecast.get("Forecast");
-                    for(Object o: forecasts) {
-                        JSONObject jobj        = (JSONObject) o;
-                        Calendar timeStamp    = (Calendar) jobj.get("timeStamp");
+                    for (Object o : forecasts) {
+                        JSONObject jobj = (JSONObject) o;
+                        Calendar timeStamp = (Calendar) jobj.get("timeStamp");
                         //String weatherType  = (String) jobj.get("weatherType");
 
-                        for(int i = 0; i < numSamples; ++i) {
-                         //   ArrayList<String> data = new ArrayList<>();
-                            JSONObject simpleforecast = (JSONObject)forecast.get(i);
+                        for (int i = 0; i < numSamples; ++i) {
+                            //   ArrayList<String> data = new ArrayList<>();
+                            JSONObject simpleforecast = (JSONObject) forecast.get(i);
                             String loc = location.getDisplayName();
-                           // data.add(loc);
+                            // data.add(loc);
                         }
-                        Location loc =(Location) jobj.get("location");
-                     //   simpleforecast.add(data);
+                        Location loc = (Location) jobj.get("location");
+                        //   simpleforecast.add(data);
                         simpleforecast.add(new SimpleWeatherForecastSample(
                                 timeStamp,
                                 numSamples,
@@ -91,8 +91,7 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
-                }
-                finally {
+                } finally {
                     connection.disconnect();
                 }
             } catch (Exception e) {
@@ -101,7 +100,7 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
         }
         return simpleforecast;
 
-       // return null;
+        // return null;
     }
 
     /**
@@ -111,16 +110,16 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
     public TextualForecast getLongTermForecast() {
         // TODO: Please implement
         // API link
-       // URL longterm = new URL("http://datapoint.metoffice.gov.uk/public/data/txt/wxfcs/regionalforecast/json/500?key=6cb4001b-cb25-4682-baf3-61a64918d89b");
+        // URL longterm = new URL("http://datapoint.metoffice.gov.uk/public/data/txt/wxfcs/regionalforecast/json/500?key=6cb4001b-cb25-4682-baf3-61a64918d89b");
         return null;
     }
-    
+
     /**
      * @see WeatherForecastService
      */
     @Override
     public ArrayList<Location> getAvailableLocations() {
-        if(locationCache == null) {
+        if (locationCache == null) {
             try {
                 locationCache = new ArrayList<Location>();
                 URL locUrl = new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/sitelist?key=" + apiKey);
@@ -132,26 +131,25 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
 
                     JSONObject location = (JSONObject) obj.get("Locations");
                     JSONArray locations = (JSONArray) location.get("Location");
-                    for(Object o: locations) {
-                        JSONObject jobj        = (JSONObject) o;
-                        String name            = (String) jobj.get("name");
-                        String id              = (String) jobj.get("id");
-                        String latitudeString  = (String) jobj.get("latitude");
+                    for (Object o : locations) {
+                        JSONObject jobj = (JSONObject) o;
+                        String name = (String) jobj.get("name");
+                        String id = (String) jobj.get("id");
+                        String latitudeString = (String) jobj.get("latitude");
                         String longitudeString = (String) jobj.get("longitude");
-                        float latitude         = Float.parseFloat(latitudeString);
-                        float longitude        = Float.parseFloat(longitudeString);
+                        float latitude = Float.parseFloat(latitudeString);
+                        float longitude = Float.parseFloat(longitudeString);
 
                         locationCache.add(new Location(
-                            name,
-                            id,
-                            latitude,
-                            longitude
+                                name,
+                                id,
+                                latitude,
+                                longitude
                         ));
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
-                }
-                finally {
+                } finally {
                     connection.disconnect();
                 }
             } catch (Exception e) {
@@ -162,11 +160,11 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
     }
 
     /**
-     * @see WeatherForecastService
      * @return
+     * @see WeatherForecastService
      */
     @Override
-    public ArrayList<String> getLocationByName(String displayName) {
+    public Location getLocationByName(String displayName) {
         // TODO: Implement after getAvailableLocations
         // I suggest some sort of caching of the available locations
         // to reduce calls to the API
@@ -184,7 +182,7 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
             connection.setRequestProperty("Accept-Charset", charset);
             InputStream response = connection.getInputStream();
 
-            HttpURLConnection conn = (HttpURLConnection)connection;
+            HttpURLConnection conn = (HttpURLConnection) connection;
             int status = conn.getResponseCode();
             for (Entry<String, List<String>> header : connection.getHeaderFields().entrySet()) {
 
@@ -195,22 +193,23 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
             JSONParser parser = new JSONParser();
             Object resultObject = parser.parse(json);
 
-            JSONObject obj =(JSONObject)resultObject;
+            JSONObject obj = (JSONObject) resultObject;
             JSONObject locs = (JSONObject) obj.get("Locations");
             JSONArray loc = (JSONArray) locs.get("Location");
 
 
-            for (int i=0;i<loc.size();i++) {
-                JSONObject location = (JSONObject)loc.get(i);
-                displayName = (String)location.get("displayName");
+            for (int i = 0; i < loc.size(); i++) {
+                JSONObject location = (JSONObject) loc.get(i);
+                displayName = (String) location.get("displayName");
                 names.add(displayName);
+
             }
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
-        return names;
+       // return names;
 
-       // return null;
+         return null;
     }
 
     // This API key is from an account created by Jonathan Wood
@@ -223,12 +222,13 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
     public static void main(String[] args) {
         // I suggest we use this to try out API calls
         MetOfficeWeatherForecastService ws = new MetOfficeWeatherForecastService();
-        for(Location location: ws.getAvailableLocations()) {
+        for (Location location : ws.getAvailableLocations()) {
             System.out.println(location);
         }
       /*  for(SimpleWeatherForecastSample forecast: ws.getSimpleForecast()) {
             System.out.println(forecast);
         }*/
+
     }
 
     private ArrayList<Location> locationCache;

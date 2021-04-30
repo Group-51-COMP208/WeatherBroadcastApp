@@ -71,7 +71,7 @@ public class PlaceholderWeatherForecastService implements WeatherForecastService
 
 
     @Override
-    public ArrayList<String> getLocationByName(String displayName) {
+    public Location getLocationByName(String displayName) {
         for(Location l: getAvailableLocations()) {
             if(l.getDisplayName().equals(displayName)) {
                 return l;

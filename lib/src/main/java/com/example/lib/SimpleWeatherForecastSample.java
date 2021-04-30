@@ -18,7 +18,7 @@ public class SimpleWeatherForecastSample extends WeatherForecastSample {
     SimpleWeatherForecastSample(Calendar timeStamp, int numSamples, Location location) {
         super();
         this.timeStamp = timeStamp;
-        //this.weatherType = weatherType;
+        this.weatherType = weatherType;
         this.numSamples =numSamples;
         this.location = location;
     }

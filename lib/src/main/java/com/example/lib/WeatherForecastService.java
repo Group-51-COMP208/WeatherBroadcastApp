@@ -55,5 +55,5 @@ public interface WeatherForecastService {
      * @param displayName name of the location, as it appears in the underlying API
      * @return Location object of the requested displayName, with all other fields set
      */
-    ArrayList<String> getLocationByName(String displayName);
+    Location getLocationByName(String displayName);
 }
