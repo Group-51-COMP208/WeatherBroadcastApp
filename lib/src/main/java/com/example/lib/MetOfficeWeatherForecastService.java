@@ -52,7 +52,7 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
      * @see WeatherForecastService
      */
     @Override
-    public ArrayList<SimpleWeatherForecastSample> getSimpleForecast(Calendar start,/* Duration resolution,*/ int numSamples, Location location) {
+    public ArrayList<SimpleWeatherForecastSample> getSimpleForecast(Calendar start, Duration resolution, int numSamples, Location location) {
         // TODO: Please implement
         // Forecast API
         // URL simpleData = new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/352409?res=daily&key=474b382b-4970-4685-a1dd-8bffd071216b");
