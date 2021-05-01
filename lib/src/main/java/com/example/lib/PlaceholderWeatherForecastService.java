@@ -1,6 +1,7 @@
 package com.example.lib;
 
 import java.time.Duration;
+import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -10,9 +11,11 @@ import java.util.Calendar;
  */
 public class PlaceholderWeatherForecastService implements WeatherForecastService {
     @Override
-    public ArrayList<DetailedWeatherForecastSample> getDetailedForecast(Calendar start, Duration resolution, int numSamples, Location location) {
+    public ArrayList<DetailedWeatherForecastSample> getDetailedForecast(Calendar start, Location location) {
         // Ascending values for testing
         ArrayList<DetailedWeatherForecastSample> samples = new ArrayList<DetailedWeatherForecastSample>();
+        Duration resolution = Duration.ofHours(3);
+        final int numSamples = 40;
         for(int i = 0; i < numSamples; ++i) {
             DetailedWeatherForecastSample sample = new DetailedWeatherForecastSample();
             sample.timeStamp = (Calendar) start.clone();
@@ -31,15 +34,17 @@ public class PlaceholderWeatherForecastService implements WeatherForecastService
     }
 
     @Override
-    public ArrayList<SimpleWeatherForecastSample> getSimpleForecast(Calendar start, Duration resolution, int numSamples, Location location) {
+    public ArrayList<SimpleWeatherForecastSample> getSimpleForecast(Calendar start, Location location) {
         ArrayList<SimpleWeatherForecastSample> samples = new ArrayList<SimpleWeatherForecastSample>();
+        Duration resolution = Duration.ofHours(3);
+        final int numSamples = 24;
         for(int i = 0; i < numSamples; ++i) {
-            SimpleWeatherForecastSample sample = new SimpleWeatherForecastSample(start,numSamples,location);
-            sample.timeStamp = (Calendar) start.clone();
+            SimpleWeatherForecastSample sample = new SimpleWeatherForecastSample(
+                    (Calendar) start.clone(),
+                    WeatherType.values()[i % WeatherType.values().length],
+                    location
+            );
             sample.timeStamp.add(Calendar.MINUTE, (int) resolution.toMinutes() * i);
-            sample.location = location;
-            // Just cycling through the weather types for testing purposes
-            sample.weatherType = WeatherType.values()[i % WeatherType.values().length];
             samples.add(sample);
         }
         return samples;
@@ -89,8 +94,7 @@ public class PlaceholderWeatherForecastService implements WeatherForecastService
 
         Location liv = ws.getAvailableLocations().get(0);
 
-        for(DetailedWeatherForecastSample sample: ws.getDetailedForecast(Calendar.getInstance(),
-                Duration.ofHours(1), 24, liv)) {
+        for(DetailedWeatherForecastSample sample: ws.getDetailedForecast(Calendar.getInstance(), liv)) {
             System.out.println(sample);
         }
     }

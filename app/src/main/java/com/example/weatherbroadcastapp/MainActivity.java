@@ -182,8 +182,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ImageView imageView_weatherIcon = findViewById(R.id.imageView_weatherIcon);
         textView_currentLocation.setText(locationService.getSelectedLocation().getDisplayName());
 
-        DetailedWeatherForecastSample sample = Services.get().getWeatherForecastService().getDetailedForecast(Calendar.getInstance(),
-                                            Duration.ofHours(1), 1, locationService.getSelectedLocation()).get(0);
+        // TODO: Verify that this actually returns the current weather
+        DetailedWeatherForecastSample sample = Services.get().getWeatherForecastService().getDetailedForecast(
+                                                    Calendar.getInstance(),
+                                                    locationService.getSelectedLocation()).get(0);
         textView_currentTemperature.setText(String.format(getString(R.string.n_degrees_c), (int)sample.temperature_celsius));
         textView_currentWindSpeed.setText(String.valueOf((int)sample.windSpeed_mph));
         imageView_weatherIcon.setImageResource(WeatherIcons.getIconId(sample.weatherType));

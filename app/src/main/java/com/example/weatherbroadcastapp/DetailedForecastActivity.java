@@ -20,9 +20,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class DetailedForecastActivity extends AppCompatActivity {
-    final private static int resolutionInHours = 1;
-    final private static int numSamples = 24 * 3 / resolutionInHours;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,8 +76,8 @@ public class DetailedForecastActivity extends AppCompatActivity {
         windSpeedRow.addView(label);
 
         Location location = Services.get().getLocationService().getSelectedLocation();
-        ArrayList<DetailedWeatherForecastSample> samples = Services.get().getWeatherForecastService().getDetailedForecast(Calendar.getInstance(),
-                Duration.ofHours(resolutionInHours), numSamples, location);
+        ArrayList<DetailedWeatherForecastSample> samples = Services.get().getWeatherForecastService().getDetailedForecast(
+                Calendar.getInstance(), location);
 
 
         for(DetailedWeatherForecastSample sample: samples) {

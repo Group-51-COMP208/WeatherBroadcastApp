@@ -20,17 +20,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class SimpleForecastActivity extends AppCompatActivity {
-    final private static int resolutionInHours = 4;
-    final private static int numSamples = 24 * 14 / resolutionInHours;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_simple_forecast);
 
         Location location = Services.get().getLocationService().getSelectedLocation();
-        ArrayList<SimpleWeatherForecastSample> samples = Services.get().getWeatherForecastService().getSimpleForecast(Calendar.getInstance(),
-                Duration.ofHours(1), 24 * 3, location);
+        ArrayList<SimpleWeatherForecastSample> samples = Services.get().getWeatherForecastService().getSimpleForecast(
+                Calendar.getInstance(), location);
 
         TableLayout table = findViewById(R.id.tableLayout_simpleForecast);
 

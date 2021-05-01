@@ -42,8 +42,6 @@ public class MapView extends View {
 
     private ArrayList<Location> significantLocations;
     private Calendar startTime;
-    final private Duration sampleResolution = Duration.ofHours(4);
-    final private int numSamples = 18;
     private int currentSample = 0;
 
     Map<String, ArrayList<DetailedWeatherForecastSample>> samples = new HashMap<String, ArrayList<DetailedWeatherForecastSample>>();
@@ -92,7 +90,7 @@ public class MapView extends View {
         startTime = Calendar.getInstance();
 
         for(Location l: significantLocations) {
-            samples.put(l.getDisplayName(), wfs.getDetailedForecast( startTime, sampleResolution, numSamples, l));
+            samples.put(l.getDisplayName(), wfs.getDetailedForecast( startTime, l));
         }
     }
 
@@ -133,7 +131,8 @@ public class MapView extends View {
 
     // The time for which forecasts are currently being displayed
     public Calendar getCurrentTime() {
-        return Utilities.addTime(startTime, sampleResolution, currentSample);
+//        return Utilities.addTime(startTime, sampleResolution, currentSample);
+        return samples.get(significantLocations.get(0).getDisplayName()).get(0).timeStamp;
     }
 
     // Specifies the time to show the weather for as a zero to one ratio between the current
@@ -141,7 +140,7 @@ public class MapView extends View {
     public void setTimeNormalized(float time0to1) {
         if(time0to1 > 1.f)       time0to1 = 1.f;
         else if(time0to1 < 0.f)  time0to1 = 0.f;
-        int newSample = (int) (time0to1 * (numSamples - 1));
+        int newSample = (int) (time0to1 * (samples.size() - 1));
         if(currentSample != newSample) {
             currentSample = newSample;
             invalidate();

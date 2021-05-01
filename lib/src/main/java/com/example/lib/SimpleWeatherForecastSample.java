@@ -8,18 +8,11 @@ import java.util.Calendar;
 * is worth having as it is not unlikely that it will change.
  */
 public class SimpleWeatherForecastSample extends WeatherForecastSample {
-    public Calendar timeStamp;
-    public WeatherType weatherType;
-    int numSamples;
-     /* for(int i = 0; i < numSamples; ++i) {
-        weatherType = WeatherType.values()[i % WeatherType.values().length];
-    }*/
     public Location location;
-    SimpleWeatherForecastSample(Calendar timeStamp, int numSamples, Location location) {
+    SimpleWeatherForecastSample(Calendar timeStamp, WeatherType weatherType, Location location) {
         super();
         this.timeStamp = timeStamp;
         this.weatherType = weatherType;
-        this.numSamples =numSamples;
         this.location = location;
     }
 

@@ -13,25 +13,21 @@ public interface WeatherForecastService {
      * Gets an array of localized weather predictions for the specified period, with detailed
      * weather information.
      * @param start The date/time of the first sample
-     * @param resolution The period between samples (e.g. 3 hours for three-hourly report)
-     * @param numSamples The number of samples to be returned
      * @param location The location in the world that the forecast applies to
      * @return An array of weather forecast samples, ordered by increasing time in increments
      * specified by 'resolution', starting from 'start'.
      */
-    ArrayList<DetailedWeatherForecastSample> getDetailedForecast(Calendar start, Duration resolution, int numSamples, Location location);
+    ArrayList<DetailedWeatherForecastSample> getDetailedForecast(Calendar start, Location location);
 
     /**
      * Gets an array of localized weather predictions for the specified period, with just simple
      * weather information.
      * @param start The date/time of the first sample
-     * @param resolution The period between samples (e.g. 3 hours for three-hourly report)
-     * @param numSamples The number of samples to be returned
      * @param location The location in the world that the forecast applies to
      * @return An array of weather forecast samples, ordered by increasing time in increments
      * specified by 'resolution', starting from 'start'.
      */
-    ArrayList<SimpleWeatherForecastSample> getSimpleForecast(Calendar start, Duration resolution, int numSamples, Location location);
+    ArrayList<SimpleWeatherForecastSample> getSimpleForecast(Calendar start, Location location);
 
     /**
      * A long term forecast from the weather service
