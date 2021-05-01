@@ -5,6 +5,5 @@ import java.util.Calendar;
 
 public class TextualForecast {
     public String text;
-    public Calendar startTime;
-    public Duration duration;
+    public String period;
 }
