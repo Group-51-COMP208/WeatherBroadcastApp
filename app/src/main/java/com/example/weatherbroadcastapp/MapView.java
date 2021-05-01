@@ -132,7 +132,7 @@ public class MapView extends View {
     // The time for which forecasts are currently being displayed
     public Calendar getCurrentTime() {
 //        return Utilities.addTime(startTime, sampleResolution, currentSample);
-        return samples.get(significantLocations.get(0).getDisplayName()).get(0).timeStamp;
+        return samples.get(significantLocations.get(0).getDisplayName()).get(currentSample).timeStamp;
     }
 
     // Specifies the time to show the weather for as a zero to one ratio between the current
