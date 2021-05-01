@@ -2,11 +2,11 @@ package com.example.lib;
 
 import java.util.ArrayList;
 
-public class Location extends ArrayList<String> {
+public class Location {
     Location(String names, String apiId,
              float latitude, float longitude)
     {
-        this.names = names;
+        this.name = names;
         this.apiId = apiId;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -14,13 +14,13 @@ public class Location extends ArrayList<String> {
 
     @Override
     public String toString() {
-        return "{" + names + ". " + apiId + ", "
+        return "{" + name + ". " + apiId + ", "
                 + String.valueOf(latitude) + ", " + String.valueOf(longitude)
                 + "}";
     }
 
     public String getDisplayName() {
-        return names;
+        return name;
     }
 
     public String getApiId() {
@@ -38,7 +38,7 @@ public class Location extends ArrayList<String> {
 
     // I don't see any reason that any of these should change
     // for a given location, hence final.
-    final private String names;
+    final private String name;
     final private String apiId;
     final private float latitude;
     final private float longitude;
