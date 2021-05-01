@@ -14,7 +14,7 @@ public class Location {
 
     @Override
     public String toString() {
-        return "{" + name + ". " + apiId + ", "
+        return "{" + name + ", " + apiId + ", "
                 + String.valueOf(latitude) + ", " + String.valueOf(longitude)
                 + "}";
     }
