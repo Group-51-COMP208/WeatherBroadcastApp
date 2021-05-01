@@ -35,11 +35,28 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
         ArrayList<String> ids = new ArrayList<String>();
     }
 
+    final private static String[] compassCodes = {"N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
+                                            "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"};
+
+    public static float metOfficeCompassCodeToDegrees(String code) {
+        for(int i = 0; i < compassCodes.length; ++i) {
+            if(code.equals(compassCodes[i])) {
+                float segmentSize = 360.f / compassCodes.length;
+                return i * segmentSize;
+            }
+        }
+        return 0;
+    }
+
     /**
      * @see WeatherForecastService
      */
     @Override
     public ArrayList<DetailedWeatherForecastSample> getDetailedForecast(Location location) {
+        // We are expecting 3 hourly samples so will be 8 in a full day
+        final int expectedDailySamples = 8;
+        final int sampleHourlyResolution = 3;
+
         // TODO: Please implement
         // Forecast API
         // URL detailData = new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/352409?res=3hourly&key=474b382b-4970-4685-a1dd-8bffd071216b");
@@ -55,11 +72,10 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
                 JSONParser parser = new JSONParser();
                 JSONObject obj = (JSONObject) parser.parse(reader);
                 JSONObject siteRep = (JSONObject) obj.get("SiteRep");
-                JSONObject dv = (JSONObject) siteRep.get("dv");
-                JSONObject locationForecast = (JSONObject) dv.get("location");
+                JSONObject dv = (JSONObject) siteRep.get("DV");
+                JSONObject locationForecast = (JSONObject) dv.get("Location");
                 JSONArray data = (JSONArray) locationForecast.get("Period");
                 for(Object obji: data) {
-                    DetailedWeatherForecastSample thisSample = new DetailedWeatherForecastSample();
                     JSONObject day = (JSONObject) obji;
                     // It would appear that each object in period contains the samples for a given
                     // day. At 3 hour resolution, this is usually 8, but samples in the past are omitted,
@@ -78,22 +94,39 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
                     int month = Integer.parseInt(dateSplit[1]);
                     int dayOfMonth = Integer.parseInt(dateSplit[2]);
 
-                    thisSample.timeStamp = Calendar.getInstance();
-                    thisSample.timeStamp.set(Calendar.YEAR, year);
-                    thisSample.timeStamp.set(Calendar.MONTH, month);
-                    thisSample.timeStamp.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
                     // Don't know what 'Rep' is supposed to stand for but this appears to be the weather
                     // samples for this day
                     JSONArray dailySamples = (JSONArray) day.get("Rep");
-                    for(Object obj2: dailySamples) {
-                        JSONObject jsonSample = (JSONObject) obj2;
-                        String weatherTypeString = (String) jsonSample.get("W");
-                        System.out.println(weatherTypeString);
-                        // TODO: Continue parsing
-                    }
+                    // It is normal for there to be a few missing samples at the start of the forecast
+                    // for today as samples from the past are omitted
+                    final int missingSamples = expectedDailySamples - dailySamples.size();
+                    for(int i = 0; i < dailySamples.size(); ++i) {
+                        JSONObject jsonSample = (JSONObject) dailySamples.get(i);
+                        String weatherTypeString   = (String) jsonSample.get("W");
+                        String windSpeedString     = (String) jsonSample.get("S");
+                        String windDirectionString = (String) jsonSample.get("D");
+                        String uvIndexString = (String) jsonSample.get("U");
+                        String precipitationProbabilityString = (String) jsonSample.get("Pp");
+                        String temperatureString = (String) jsonSample.get("T");
 
-                    samples.add(thisSample);
+                        DetailedWeatherForecastSample thisSample = new DetailedWeatherForecastSample();
+                        thisSample.timeStamp = Calendar.getInstance();
+                        thisSample.timeStamp.set(Calendar.YEAR, year);
+                        thisSample.timeStamp.set(Calendar.MONTH, month);
+                        thisSample.timeStamp.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        thisSample.timeStamp.set(Calendar.HOUR_OF_DAY,
+                                sampleHourlyResolution * i + missingSamples * sampleHourlyResolution);
+                        thisSample.timeStamp.set(Calendar.MINUTE, 0);
+
+                        thisSample.weatherType = WeatherType.fromMetOfficeApiCode(weatherTypeString);
+                        thisSample.windSpeed_mph = Float.parseFloat(windSpeedString);
+                        thisSample.windDirection_degrees = metOfficeCompassCodeToDegrees(windDirectionString);
+                        thisSample.uvIndex = Integer.parseInt(uvIndexString);
+                        thisSample.temperature_celsius = Float.parseFloat(temperatureString);
+                        thisSample.precipitationProbability = Float.parseFloat(precipitationProbabilityString);
+                        thisSample.location = location;
+                        samples.add(thisSample);
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -246,9 +279,14 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
       /*  for(SimpleWeatherForecastSample forecast: ws.getSimpleForecast()) {
             System.out.println(forecast);
         }*/
+//
+//        Location location = ws.getLocationByName("Manchester");
+//        System.out.println("Location by name: " + location);
 
-        Location location = ws.getLocationByName("Manchester");
-        System.out.println("Location by name: " + location);
+        ArrayList<DetailedWeatherForecastSample> samples = ws.getDetailedForecast(ws.getLocationByName("Liverpool"));
+        for(DetailedWeatherForecastSample sample: samples) {
+            System.out.println(sample);
+        }
     }
 
     private ArrayList<Location> locationCache;

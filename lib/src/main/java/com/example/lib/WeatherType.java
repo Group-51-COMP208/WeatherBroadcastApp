@@ -76,12 +76,21 @@ public enum WeatherType {
     THUNDER_SHOWER_DAY ("29"),
     THUNDER ("30"),;
 
-    private String weatherCode;
+    final private String weatherCode;
     private WeatherType(final String code){
         this.weatherCode = code;
     }
 
     public String getCode() {
         return weatherCode;
+    }
+
+    public static WeatherType fromMetOfficeApiCode(String code) {
+      for(WeatherType wt: values()) {
+        if(wt.getCode().equals(code)) {
+          return wt;
+        }
+      }
+      return NOT_AVAILABLE;
     }
 }
