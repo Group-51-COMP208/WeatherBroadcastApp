@@ -1,24 +1,21 @@
 package com.example.lib;
-import java.io.InputStream;
 import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Calendar;
 import org.w3c.dom.*;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URLConnection;
-import java.net.URLEncoder;
-import java.util.List;
-import java.util.Map.Entry;
-import java.io.BufferedReader;
-
+import org.json.JSONException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 
 /*
 * Note: There are many HTTP clients that we could use but
@@ -48,9 +45,10 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
         return 0;
     }
 
-    /**
-     * @see WeatherForecastService
-     */
+
+            /**
+             * @see WeatherForecastService
+             */
     @Override
     public ArrayList<DetailedWeatherForecastSample> getDetailedForecast(Location location) {
         // We are expecting 3 hourly samples so will be 8 in a full day
@@ -193,15 +191,50 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
          return null;
     }
 
-    /**
+
+
+
+        /**
      * @see WeatherForecastService
+     * @return
      */
     @Override
     public TextualForecast getLongTermForecast() {
         // TODO: Please implement
         // API link
         // URL longterm = new URL("http://datapoint.metoffice.gov.uk/public/data/txt/wxfcs/regionalforecast/json/500?key=6cb4001b-cb25-4682-baf3-61a64918d89b");
-        return null;
+        TextualForecast textualForecast = new TextualForecast();
+            try {
+              //  String textualForecast = new ArrayList<String>();
+                URL locUrl = new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/sitelist?key=" + apiKey);
+                HttpURLConnection connection = (HttpURLConnection) locUrl.openConnection();
+                try {
+                    Reader reader = new InputStreamReader(connection.getInputStream());
+                    JSONParser parser = new JSONParser();
+                    JSONObject obj = (JSONObject) parser.parse(reader);
+
+                    JSONObject RegionalFcst = (JSONObject) obj.get("RegionalFcst");
+                    JSONObject FcstPeriods = (JSONObject) RegionalFcst.get("FcstPeriods");
+                    JSONArray textperiod = (JSONArray) FcstPeriods.get("Period");
+
+
+                    for (int i = 0; i < textperiod.size(); i++) {
+                        JSONObject jobj = (JSONObject) textperiod.get(i);
+                        String period = jobj.get("id").toString();
+                        String text =  jobj.get("Paragraph").toString();
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    connection.disconnect();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        return  textualForecast;
+
     }
 
     /**
@@ -273,9 +306,9 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
     public static void main(String[] args) {
         // I suggest we use this to try out API calls
         MetOfficeWeatherForecastService ws = new MetOfficeWeatherForecastService();
-//        for (Location location : ws.getAvailableLocations()) {
-//            System.out.println(location);
-//        }
+        for (Location location : ws.getAvailableLocations()) {
+            System.out.println(location);
+        }
       /*  for(SimpleWeatherForecastSample forecast: ws.getSimpleForecast()) {
             System.out.println(forecast);
         }*/
@@ -287,8 +320,13 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
         for(DetailedWeatherForecastSample sample: samples) {
             System.out.println(sample);
         }
+
+     /*   for(TextualForecast textualForecast : ws.getLongTermForecast()) {
+            System.out.println(textualForecast);
+        }*/
     }
 
     private ArrayList<Location> locationCache;
     private ArrayList<SimpleWeatherForecastSample> simpleforecast;
+    private TextualForecast textualForecast;
 }
