@@ -39,20 +39,78 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
      * @see WeatherForecastService
      */
     @Override
-    public ArrayList<DetailedWeatherForecastSample> getDetailedForecast(Calendar start, Location location) {
+    public ArrayList<DetailedWeatherForecastSample> getDetailedForecast(Location location) {
         // TODO: Please implement
         // Forecast API
         // URL detailData = new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/352409?res=3hourly&key=474b382b-4970-4685-a1dd-8bffd071216b");
         // Location API
         // URL detailloc =  new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/sitelist?key=6cb4001b-cb25-4682-baf3-61a64918d89b");
-        return null;
+        ArrayList<DetailedWeatherForecastSample> samples = new ArrayList<DetailedWeatherForecastSample>();
+        try {
+            locationCache = new ArrayList<Location>();
+            URL locUrl = new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/" + location.getApiId() + "?res=3hourly&key=" + apiKey);
+            HttpURLConnection connection = (HttpURLConnection) locUrl.openConnection();
+            try {
+                Reader reader = new InputStreamReader(connection.getInputStream());
+                JSONParser parser = new JSONParser();
+                JSONObject obj = (JSONObject) parser.parse(reader);
+                JSONObject siteRep = (JSONObject) obj.get("SiteRep");
+                JSONObject dv = (JSONObject) siteRep.get("dv");
+                JSONObject locationForecast = (JSONObject) dv.get("location");
+                JSONArray data = (JSONArray) locationForecast.get("Period");
+                for(Object obji: data) {
+                    DetailedWeatherForecastSample thisSample = new DetailedWeatherForecastSample();
+                    JSONObject day = (JSONObject) obji;
+                    // It would appear that each object in period contains the samples for a given
+                    // day. At 3 hour resolution, this is usually 8, but samples in the past are omitted,
+                    // hence the first day probably has fewer samples.
+                    // The samples are in 3 hourly intervals starting from midnight, from which we can
+                    // deduce the time of the first sample.
+                    // This is the date of the day
+                    String dayDate = (String) day.get("value");
+                    String[] dateSplit = dayDate.split("-");
+
+                    // Get rid of the trailing 'Z' (incidentally, I think this just indicates UTC+0
+                    dateSplit[2] = dateSplit[2].substring(0, dateSplit[2].length() - 1);
+
+                    // TODO: Error catching?
+                    int year = Integer.parseInt(dateSplit[0]);
+                    int month = Integer.parseInt(dateSplit[1]);
+                    int dayOfMonth = Integer.parseInt(dateSplit[2]);
+
+                    thisSample.timeStamp = Calendar.getInstance();
+                    thisSample.timeStamp.set(Calendar.YEAR, year);
+                    thisSample.timeStamp.set(Calendar.MONTH, month);
+                    thisSample.timeStamp.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                    // Don't know what 'Rep' is supposed to stand for but this appears to be the weather
+                    // samples for this day
+                    JSONArray dailySamples = (JSONArray) day.get("Rep");
+                    for(Object obj2: dailySamples) {
+                        JSONObject jsonSample = (JSONObject) obj2;
+                        String weatherTypeString = (String) jsonSample.get("W");
+                        System.out.println(weatherTypeString);
+                        // TODO: Continue parsing
+                    }
+
+                    samples.add(thisSample);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                connection.disconnect();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return samples;
     }
 
     /**
      * @see WeatherForecastService
      */
     @Override
-    public ArrayList<SimpleWeatherForecastSample> getSimpleForecast(Calendar start, Location location) {
+    public ArrayList<SimpleWeatherForecastSample> getSimpleForecast(Location location) {
         // TODO: Please implement
         // Forecast API
         // URL simpleData = new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/352409?res=daily&key=474b382b-4970-4685-a1dd-8bffd071216b");

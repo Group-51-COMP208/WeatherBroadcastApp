@@ -90,7 +90,7 @@ public class MapView extends View {
         startTime = Calendar.getInstance();
 
         for(Location l: significantLocations) {
-            samples.put(l.getDisplayName(), wfs.getDetailedForecast( startTime, l));
+            samples.put(l.getDisplayName(), wfs.getDetailedForecast(l));
         }
     }
 

@@ -11,9 +11,10 @@ import java.util.Calendar;
  */
 public class PlaceholderWeatherForecastService implements WeatherForecastService {
     @Override
-    public ArrayList<DetailedWeatherForecastSample> getDetailedForecast(Calendar start, Location location) {
+    public ArrayList<DetailedWeatherForecastSample> getDetailedForecast(Location location) {
         // Ascending values for testing
         ArrayList<DetailedWeatherForecastSample> samples = new ArrayList<DetailedWeatherForecastSample>();
+        Calendar start = Calendar.getInstance();
         Duration resolution = Duration.ofHours(3);
         final int numSamples = 40;
         for(int i = 0; i < numSamples; ++i) {
@@ -34,8 +35,9 @@ public class PlaceholderWeatherForecastService implements WeatherForecastService
     }
 
     @Override
-    public ArrayList<SimpleWeatherForecastSample> getSimpleForecast(Calendar start, Location location) {
+    public ArrayList<SimpleWeatherForecastSample> getSimpleForecast(Location location) {
         ArrayList<SimpleWeatherForecastSample> samples = new ArrayList<SimpleWeatherForecastSample>();
+        Calendar start = Calendar.getInstance();
         Duration resolution = Duration.ofHours(3);
         final int numSamples = 24;
         for(int i = 0; i < numSamples; ++i) {
@@ -93,7 +95,7 @@ public class PlaceholderWeatherForecastService implements WeatherForecastService
 
         Location liv = ws.getAvailableLocations().get(0);
 
-        for(DetailedWeatherForecastSample sample: ws.getDetailedForecast(Calendar.getInstance(), liv)) {
+        for(DetailedWeatherForecastSample sample: ws.getDetailedForecast(liv)) {
             System.out.println(sample);
         }
     }

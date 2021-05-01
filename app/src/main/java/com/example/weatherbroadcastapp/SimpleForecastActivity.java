@@ -26,8 +26,7 @@ public class SimpleForecastActivity extends AppCompatActivity {
         setContentView(R.layout.activity_simple_forecast);
 
         Location location = Services.get().getLocationService().getSelectedLocation();
-        ArrayList<SimpleWeatherForecastSample> samples = Services.get().getWeatherForecastService().getSimpleForecast(
-                Calendar.getInstance(), location);
+        ArrayList<SimpleWeatherForecastSample> samples = Services.get().getWeatherForecastService().getSimpleForecast(location);
 
         TableLayout table = findViewById(R.id.tableLayout_simpleForecast);
 

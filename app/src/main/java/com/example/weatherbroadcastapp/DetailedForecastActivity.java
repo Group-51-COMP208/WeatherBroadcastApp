@@ -76,8 +76,7 @@ public class DetailedForecastActivity extends AppCompatActivity {
         windSpeedRow.addView(label);
 
         Location location = Services.get().getLocationService().getSelectedLocation();
-        ArrayList<DetailedWeatherForecastSample> samples = Services.get().getWeatherForecastService().getDetailedForecast(
-                Calendar.getInstance(), location);
+        ArrayList<DetailedWeatherForecastSample> samples = Services.get().getWeatherForecastService().getDetailedForecast(location);
 
 
         for(DetailedWeatherForecastSample sample: samples) {
