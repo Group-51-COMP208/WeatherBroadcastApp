@@ -287,7 +287,6 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
         // URL longterm = new URL("http://datapoint.metoffice.gov.uk/public/data/txt/wxfcs/regionalforecast/json/500?key=6cb4001b-cb25-4682-baf3-61a64918d89b");
         TextualForecast textualForecast = new TextualForecast();
             try {
-              //  String textualForecast = new ArrayList<String>();
                 URL texturalUrl = new URL("http://datapoint.metoffice.gov.uk/public/data/txt/wxfcs/regionalforecast/json/500?key=" + apiKey);
                 HttpURLConnection connection = (HttpURLConnection) texturalUrl.openConnection();
                 try {
@@ -299,14 +298,21 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
                     JSONObject FcstPeriods = (JSONObject) RegionalFcst.get("FcstPeriods");
                     JSONArray textperiod = (JSONArray) FcstPeriods.get("Period");
 
-                    for(Object o : textperiod){
+                  /*  for(Object o:textperiod){
                         JSONObject jobj = (JSONObject) o;
-                       // String period = jobj.get("id").toString();
-                      //  String text =  jobj.get("Paragraph").toString();
-                        textualForecast.period = "LongTerm weather forecast for "+jobj.get("id").toString();
-                        textualForecast.text = jobj.get("Paragraph").toString();
+                        textualForecast.period = jobj.get("id").toString();
+                        textualForecast.text =  jobj.get("Paragraph").toString();
+                        return textualForecast;
+                    }  */
+                    for (int i = 0; i < textperiod.size(); i++) {
+                        JSONArray paragraph = (JSONArray) ((JSONObject) textperiod.get(i)).get("Paragraph");
+                        JSONObject jobj = (JSONObject) paragraph.get(i);
+                        JSONObject id = (JSONObject) textperiod.get(i);
+                        textualForecast.period = "LongTerm weather forecast for "+id.get("id").toString();
+                        textualForecast.text = jobj.get("$").toString();
+                       // System.out.println(textualForecast);
+                        return textualForecast;
                     }
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 } finally {
@@ -400,16 +406,16 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
 //        Location location = ws.getLocationByName("Manchester");
 //        System.out.println("Location by name: " + location);
 
-     /*   ArrayList<DetailedWeatherForecastSample> samples = ws.getDailyForecast(ws.getLocationByName("Liverpool"));
+      ArrayList<DetailedWeatherForecastSample> samples = ws.getDailyForecast(ws.getLocationByName("Liverpool"));
         for(DetailedWeatherForecastSample sample: samples) {
             System.out.println(sample);
-        }*/
-
-       TextualForecast textualForecast = ws.getLongTermForecast();
-            System.out.println(textualForecast);
         }
+
+        TextualForecast textualForecast = ws.getLongTermForecast();
+           System.out.println(textualForecast);
+    }
 
 
     private ArrayList<Location> locationCache;
-    private ArrayList<SimpleWeatherForecastSample> simpleforecast;
+  //  private ArrayList<SimpleWeatherForecastSample> simpleforecast;
 }
