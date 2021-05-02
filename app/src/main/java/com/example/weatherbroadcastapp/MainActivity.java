@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
-import com.example.lib.DailyForecastSample;
 import com.example.lib.DetailedWeatherForecastSample;
 import com.example.lib.Location;
 import com.example.lib.LocationService;
@@ -21,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import android.os.StrictMode;
 import android.view.KeyEvent;
 import android.view.View;
 
@@ -35,14 +35,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, TextView.OnEditorActionListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // This is not best practice. It enables us to run http calls on the main thread, which
+        // will cause the UI to freeze. Time allowing (which it is not), we should run http
+        // calls on a separate thread with an Async Task.
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
         setContentView(R.layout.activity_main);
 
         Button toMapViewButton = findViewById(R.id.button_toMapView);
