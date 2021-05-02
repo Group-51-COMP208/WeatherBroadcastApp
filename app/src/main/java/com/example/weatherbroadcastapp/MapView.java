@@ -40,9 +40,10 @@ public class MapView extends View {
 
     private static final int ICON_DRAW_SIZE = 100;
 
-    private final String[] significantLocationNames = {"London", "Brecon", "Manchester", "Glasgow", "Belfast"};
+    private final String[] significantLocationNames = {"London", "Brecon", "Manchester", "Glasgow", "Belfast", "Inverness"};
     private ArrayList<Location> significantLocations;
     private int currentSample = 0;
+    private int numSamples = 0;
 
     Map<String, ArrayList<DetailedWeatherForecastSample>> samples = new HashMap<String, ArrayList<DetailedWeatherForecastSample>>();
 
@@ -95,6 +96,16 @@ public class MapView extends View {
         for(Location l: significantLocations) {
             samples.put(l.getDisplayName(), wfs.getDetailedForecast(l));
         }
+
+        numSamples = samples.get(significantLocations.get(0).getDisplayName()).size();
+        for(Location l: significantLocations) {
+            final int n = samples.get(l.getDisplayName()).size();
+            if(n < numSamples) {
+                System.err.println("Location " + l.getDisplayName() +
+                        " has fewer samples than other location(s), at" + String.valueOf(n)
+                        + ". That probably shouldn't have happened...");
+            }
+        }
     }
 
 
@@ -134,7 +145,6 @@ public class MapView extends View {
 
     // The time for which forecasts are currently being displayed
     public Calendar getCurrentTime() {
-//        return Utilities.addTime(startTime, sampleResolution, currentSample);
         return samples.get(significantLocations.get(0).getDisplayName()).get(currentSample).timeStamp;
     }
 
@@ -143,7 +153,7 @@ public class MapView extends View {
     public void setTimeNormalized(float time0to1) {
         if(time0to1 > 1.f)       time0to1 = 1.f;
         else if(time0to1 < 0.f)  time0to1 = 0.f;
-        int newSample = (int) (time0to1 * (samples.size() - 1));
+        int newSample = (int) (time0to1 * (numSamples - 1));
         if(currentSample != newSample) {
             currentSample = newSample;
             invalidate();
