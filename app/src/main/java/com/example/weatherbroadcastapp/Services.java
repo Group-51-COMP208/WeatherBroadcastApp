@@ -1,6 +1,7 @@
 package com.example.weatherbroadcastapp;
 
 import com.example.lib.LocationService;
+import com.example.lib.MetOfficeWeatherForecastService;
 import com.example.lib.PlaceholderWeatherForecastService;
 import com.example.lib.WeatherForecastService;
 
@@ -33,7 +34,7 @@ public class Services {
 
     private Services() {
         // Placeholder. TODO: Switch to real implementation once it is sufficiently complete
-        weatherForecastService = new PlaceholderWeatherForecastService();
+        weatherForecastService = new MetOfficeWeatherForecastService();
         locationService = new SharedPreferencesLocationService();
     }
 
