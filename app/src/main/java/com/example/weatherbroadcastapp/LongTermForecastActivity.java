@@ -7,9 +7,6 @@ import android.widget.TextView;
 
 import com.example.lib.ApiException;
 import com.example.lib.TextualForecast;
-import com.example.lib.Utilities;
-
-import java.text.SimpleDateFormat;
 
 public class LongTermForecastActivity extends AppCompatActivity {
 
@@ -27,7 +24,8 @@ public class LongTermForecastActivity extends AppCompatActivity {
             textBody.setText(forecast.text);
         }
         catch(ApiException e) {
-            WeatherBroadcastApplication.handleApiException(e);
+            ExitDialog exitDialog = new ExitDialog();
+            exitDialog.show(getSupportFragmentManager(), "Exit dialog");
         }
     }
 }

@@ -30,4 +30,10 @@
     <string name="unrecognized_location_msg">"Sorry, location %s is not recognized"</string>
     <string name="next_three_days">Next Three Days</string>
     <string name="detailed_forecast">Detailed forecast</string>
+
+    <string name="network_error_dialog_title">Network error</string>
+    <string name="network_error_dialog_body">Sorry, the weather server cannot be reached.
+    Please ensure you are connected to the internet and try restarting the app.</string>
+    <string name="close_app">Close app</string>
+
 </resources>

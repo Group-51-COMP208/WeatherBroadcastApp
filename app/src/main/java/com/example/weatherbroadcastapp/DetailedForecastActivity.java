@@ -16,9 +16,7 @@ import com.example.lib.DetailedWeatherForecastSample;
 import com.example.lib.Location;
 
 import java.text.SimpleDateFormat;
-import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class DetailedForecastActivity extends AppCompatActivity {
     @Override
@@ -145,7 +143,8 @@ public class DetailedForecastActivity extends AppCompatActivity {
             }
         }
         catch(ApiException e) {
-            WeatherBroadcastApplication.handleApiException(e);
+            ExitDialog exitDialog = new ExitDialog();
+            exitDialog.show(getSupportFragmentManager(), "Exit dialog");
         }
     }
 }

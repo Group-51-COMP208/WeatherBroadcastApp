@@ -1,5 +1,6 @@
 package com.example.weatherbroadcastapp;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 
@@ -19,12 +20,6 @@ public class WeatherBroadcastApplication extends Application {
     public static Context getAppContext() {
         return appContext;
     }
-
-    public static void handleApiException(ApiException e) {
-        // TODO
-        System.err.println("Drat: " + e);
-        System.exit(-1);
-    }
-
+    
     private static Context appContext;
 }

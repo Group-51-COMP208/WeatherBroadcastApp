@@ -1,5 +1,6 @@
 package com.example.weatherbroadcastapp;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -11,15 +12,15 @@ import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.View;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
 
 import com.example.lib.ApiException;
 import com.example.lib.DetailedWeatherForecastSample;
 import com.example.lib.Location;
-import com.example.lib.Utilities;
 import com.example.lib.WeatherForecastService;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -109,7 +110,9 @@ public class MapView extends View {
             }
         }
         catch(ApiException e) {
-            WeatherBroadcastApplication.handleApiException(e);
+            ExitDialog exitDialog = new ExitDialog();
+            AppCompatActivity activity = (AppCompatActivity) getContext();
+            exitDialog.show(activity.getSupportFragmentManager(), "Exit dialog");
         }
     }
 
