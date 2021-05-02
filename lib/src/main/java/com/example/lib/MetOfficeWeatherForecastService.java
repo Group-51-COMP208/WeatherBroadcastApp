@@ -25,7 +25,7 @@ import java.io.UnsupportedEncodingException;
  */
 
 public class MetOfficeWeatherForecastService implements WeatherForecastService {
-    MetOfficeWeatherForecastService() {
+    public MetOfficeWeatherForecastService() {
         String api_key = "474b382b-4970-4685-a1dd-8bffd071216b";
         Document Day;
         Document Hour;
@@ -62,7 +62,6 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
         // URL detailloc =  new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/sitelist?key=6cb4001b-cb25-4682-baf3-61a64918d89b");
         ArrayList<DetailedWeatherForecastSample> samples = new ArrayList<DetailedWeatherForecastSample>();
         try {
-            locationCache = new ArrayList<Location>();
             URL url = new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/" + location.getApiId() + "?res=3hourly&key=" + apiKey);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             try {
@@ -145,7 +144,6 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
         // URL detailData = new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/352409?res=3hourly&key=474b382b-4970-4685-a1dd-8bffd071216b");
         ArrayList<DetailedWeatherForecastSample> samples = new ArrayList<DetailedWeatherForecastSample>();
         try {
-            locationCache = new ArrayList<Location>();
             URL url = new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/" + location.getApiId() + "?res=daily&key=" + apiKey);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             try {
@@ -361,11 +359,13 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
                         ));
                     }
                 } catch (IOException e) {
+                    System.err.println("ERROR. Some kind of network problem in MetOfficeWeatherForecastService::getAvailableLocations");
                     e.printStackTrace();
                 } finally {
                     connection.disconnect();
                 }
             } catch (Exception e) {
+                System.err.println("ERROR. Outer. Some kind of network problem in MetOfficeWeatherForecastService::getAvailableLocations");
                 e.printStackTrace();
             }
         }
@@ -402,20 +402,19 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
       /*  for(SimpleWeatherForecastSample forecast: ws.getSimpleForecast()) {
             System.out.println(forecast);
         }*/
+
+        Location location = ws.getLocationByName("London");
+        System.out.println("Location by name: " + location);
+
+//      ArrayList<DetailedWeatherForecastSample> samples = ws.getDailyForecast(ws.getLocationByName("Liverpool"));
+//        for(DetailedWeatherForecastSample sample: samples) {
+//            System.out.println(sample);
+//        }
 //
-//        Location location = ws.getLocationByName("Manchester");
-//        System.out.println("Location by name: " + location);
-
-      ArrayList<DetailedWeatherForecastSample> samples = ws.getDailyForecast(ws.getLocationByName("Liverpool"));
-        for(DetailedWeatherForecastSample sample: samples) {
-            System.out.println(sample);
-        }
-
-        TextualForecast textualForecast = ws.getLongTermForecast();
-           System.out.println(textualForecast);
+//        TextualForecast textualForecast = ws.getLongTermForecast();
+//           System.out.println(textualForecast);
     }
 
 
-    private ArrayList<Location> locationCache;
-  //  private ArrayList<SimpleWeatherForecastSample> simpleforecast;
+    private ArrayList<Location> locationCache = null;
 }
