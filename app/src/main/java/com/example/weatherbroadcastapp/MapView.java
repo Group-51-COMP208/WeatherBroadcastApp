@@ -42,7 +42,6 @@ public class MapView extends View {
 
     private final String[] significantLocationNames = {"London", "Brecon", "Manchester", "Glasgow", "Belfast"};
     private ArrayList<Location> significantLocations;
-    private Calendar startTime;
     private int currentSample = 0;
 
     Map<String, ArrayList<DetailedWeatherForecastSample>> samples = new HashMap<String, ArrayList<DetailedWeatherForecastSample>>();
@@ -93,8 +92,6 @@ public class MapView extends View {
             }
         }
 
-        startTime = Calendar.getInstance();
-
         for(Location l: significantLocations) {
             samples.put(l.getDisplayName(), wfs.getDetailedForecast(l));
         }
@@ -138,7 +135,7 @@ public class MapView extends View {
     // The time for which forecasts are currently being displayed
     public Calendar getCurrentTime() {
 //        return Utilities.addTime(startTime, sampleResolution, currentSample);
-        return samples.get(significantLocations.get(0).getDisplayName()).get(0).timeStamp;
+        return samples.get(significantLocations.get(0).getDisplayName()).get(currentSample).timeStamp;
     }
 
     // Specifies the time to show the weather for as a zero to one ratio between the current
