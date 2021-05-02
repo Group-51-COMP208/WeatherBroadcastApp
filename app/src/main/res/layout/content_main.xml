@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000"
@@ -39,6 +40,14 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/map_mercator_uk"
+                app:tint="#FFFFFF" />
 
             <Button
                 android:id="@+id/button_toMapView"
@@ -131,36 +140,63 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <Button
-                android:id="@+id/button_detailedForcast"
+            <TextView
+                android:id="@+id/textView_nextThreeDays"
+                style="@style/medium_heading"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Next Three Days"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#FFFFFF" />
+                android:text="@string/next_three_days"
+                android:textAlignment="center" />
+
+            <ImageView
+                android:id="@+id/weatherIcon_day1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/icon_cloud_sun" />
+
+            <ImageView
+                android:id="@+id/weatherIcon_day2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/icon_snow" />
+
+            <ImageView
+                android:id="@+id/weatherIcon_day3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/icon_wind_rain_cloud" />
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:layout_weight="1.5"
+            android:orientation="vertical"
+            android:gravity="center|bottom">
 
             <Button
-                android:id="@+id/button_toSimpleForecast"
+                android:id="@+id/button_detailedForcast"
+                style="@style/Widget.AppCompat.Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/button_14_day_forecast" />
+                android:layout_marginBottom="25dp"
+                android:text="@string/detailed_forecast"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="#FFFFFF" />
 
             <Button
                 android:id="@+id/button_toLongTermForecast"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/button_long_term_forecast" />
+                android:text="@string/button_long_term_forecast"
+                android:textAllCaps="false" />
         </LinearLayout>
 
     </LinearLayout>
+
 </LinearLayout>

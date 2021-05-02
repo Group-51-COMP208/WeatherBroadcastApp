@@ -34,19 +34,24 @@ public class PlaceholderWeatherForecastService implements WeatherForecastService
     }
 
     @Override
-    public ArrayList<SimpleWeatherForecastSample> getSimpleForecast(Location location) {
-        ArrayList<SimpleWeatherForecastSample> samples = new ArrayList<SimpleWeatherForecastSample>();
+    public ArrayList<DetailedWeatherForecastSample> getDailyForecast(Location location) {
+        ArrayList<DetailedWeatherForecastSample> samples = new ArrayList<DetailedWeatherForecastSample>();
         Calendar start = Calendar.getInstance();
-        Duration resolution = Duration.ofHours(3);
-        final int numSamples = 24;
+        Duration resolution = Duration.ofHours(24);
+        int numSamples = 5;
         for(int i = 0; i < numSamples; ++i) {
-            SimpleWeatherForecastSample sample = new SimpleWeatherForecastSample(
-                    (Calendar) start.clone(),
-                    WeatherType.values()[i % WeatherType.values().length],
-                    location
-            );
-            sample.timeStamp.add(Calendar.MINUTE, (int) resolution.toMinutes() * i);
-            samples.add(sample);
+            DetailedWeatherForecastSample daySample = new DetailedWeatherForecastSample();
+            daySample.timeStamp = (Calendar) start.clone();
+            daySample.timeStamp.add(Calendar.MINUTE, (int) resolution.toMinutes() * i);
+            daySample.location = location;
+            daySample.precipitationProbability = i * 0.05f;
+            daySample.temperature_celsius = i + 10;
+            daySample.uvIndex = i;
+            daySample.windDirection_degrees = i * 15 + 45;
+            daySample.windSpeed_mph = i + 10;
+            // Just cycling through the weather types for testing purposes
+            daySample.weatherType = WeatherType.values()[i % WeatherType.values().length];
+            samples.add(daySample);
         }
         return samples;
     }

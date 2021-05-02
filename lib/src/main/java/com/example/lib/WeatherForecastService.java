@@ -17,13 +17,13 @@ public interface WeatherForecastService {
     ArrayList<DetailedWeatherForecastSample> getDetailedForecast(Location location);
 
     /**
-     * Gets an array of localized weather predictions for the specified period, with just simple
-     * weather information.
-     * @param location The location in the world that the forecast applies to
-     * @return An array of weather forecast samples, ordered by increasing time in increments
-     * specified by 'resolution', starting from 'start'.
+     * A forecast with general weather conditions for a day
+     * @return The general weather conditions for the daytime of
+     * as many consecutive days are available from the underlying API
+     * from the underlying API.
      */
-    ArrayList<SimpleWeatherForecastSample> getSimpleForecast(Location location);
+    ArrayList<DetailedWeatherForecastSample> getDailyForecast(Location location);
+
 
     /**
      * A long term forecast from the weather service

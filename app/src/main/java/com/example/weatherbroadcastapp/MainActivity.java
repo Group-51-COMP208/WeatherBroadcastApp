@@ -50,9 +50,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button detailedForecastButton = findViewById(R.id.button_detailedForcast);
         detailedForecastButton.setOnClickListener(this);
 
-        Button simpleForecastButton = findViewById(R.id.button_toSimpleForecast);
-        simpleForecastButton.setOnClickListener(this);
-
         Button longTermForecastButton = findViewById(R.id.button_toLongTermForecast);
         longTermForecastButton.setOnClickListener(this);
 
@@ -162,10 +159,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else if(v.getId() == R.id.button_detailedForcast) {
             Intent detailedForecastIntent = new Intent(this, DetailedForecastActivity.class);
             startActivity(detailedForecastIntent);
-        }
-        else if(v.getId() == R.id.button_toSimpleForecast) {
-            Intent simpleForecastIntent = new Intent(this, SimpleForecastActivity.class);
-            startActivity(simpleForecastIntent);
         }
         else if(v.getId() == R.id.button_toLongTermForecast) {
             Intent longTermForecastIntent = new Intent(this, LongTermForecastActivity.class);
