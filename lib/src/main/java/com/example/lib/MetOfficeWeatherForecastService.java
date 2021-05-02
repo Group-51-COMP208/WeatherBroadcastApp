@@ -50,7 +50,7 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
      * @see WeatherForecastService
      */
     @Override
-    public ArrayList<DetailedWeatherForecastSample> getDetailedForecast(Location location) {
+    public ArrayList<DetailedWeatherForecastSample> getDetailedForecast(Location location) throws ApiException {
         // We are expecting 3 hourly samples so will be 8 in a full day
         final int expectedDailySamples = 8;
         final int sampleHourlyResolution = 3;
@@ -126,20 +126,18 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
                         samples.add(thisSample);
                     }
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
             } finally {
                 connection.disconnect();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new ApiException(e.getMessage());
         }
         return samples;
     }
 
 
     @Override
-    public ArrayList<DetailedWeatherForecastSample> getDailyForecast(Location location) {
+    public ArrayList<DetailedWeatherForecastSample> getDailyForecast(Location location) throws ApiException {
         // TODO: Please implement
         // URL detailData = new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/352409?res=3hourly&key=474b382b-4970-4685-a1dd-8bffd071216b");
         ArrayList<DetailedWeatherForecastSample> samples = new ArrayList<DetailedWeatherForecastSample>();
@@ -223,7 +221,7 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
      * @return
      */
     @Override
-    public TextualForecast getLongTermForecast() {
+    public TextualForecast getLongTermForecast() throws ApiException {
         // TODO: Please implement
         // API link
         // URL longterm = new URL("http://datapoint.metoffice.gov.uk/public/data/txt/wxfcs/regionalforecast/json/500?key=6cb4001b-cb25-4682-baf3-61a64918d89b");
@@ -255,13 +253,11 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
                        // System.out.println(textualForecast);
                         return textualForecast;
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
                 } finally {
                     connection.disconnect();
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new ApiException(e.getMessage());
             }
 
         return  textualForecast;
@@ -273,7 +269,7 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
      * @see WeatherForecastService
      */
     @Override
-    public ArrayList<Location> getAvailableLocations() {
+    public ArrayList<Location> getAvailableLocations() throws ApiException {
         if (locationCache == null) {
             try {
                 locationCache = new ArrayList<Location>();
@@ -302,15 +298,11 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
                                 longitude
                         ));
                     }
-                } catch (IOException e) {
-                    System.err.println("ERROR. Some kind of network problem in MetOfficeWeatherForecastService::getAvailableLocations");
-                    e.printStackTrace();
                 } finally {
                     connection.disconnect();
                 }
             } catch (Exception e) {
-                System.err.println("ERROR. Outer. Some kind of network problem in MetOfficeWeatherForecastService::getAvailableLocations");
-                e.printStackTrace();
+                throw new ApiException(e.getMessage());
             }
         }
         return locationCache;
@@ -321,7 +313,7 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
      * @see WeatherForecastService
      */
     @Override
-    public Location getLocationByName(String displayName) {
+    public Location getLocationByName(String displayName) throws ApiException {
         for(Location l: getAvailableLocations()) {
             if(l.getDisplayName().equals(displayName)) {
                 return l;
@@ -338,8 +330,9 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
     // You can run this method using the green 'run' arrow in the bar on the left
     // This will be useful for testing throughout development
     public static void main(String[] args) {
-        // I suggest we use this to try out API calls
-        MetOfficeWeatherForecastService ws = new MetOfficeWeatherForecastService();
+        try {
+            // I suggest we use this to try out API calls
+            MetOfficeWeatherForecastService ws = new MetOfficeWeatherForecastService();
      /*   for (Location location : ws.getAvailableLocations()) {
             System.out.println(location);
         }*/
@@ -347,8 +340,8 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
             System.out.println(forecast);
         }*/
 
-        Location location = ws.getLocationByName("London");
-        System.out.println("Location by name: " + location);
+            Location location = ws.getLocationByName("London");
+            System.out.println("Location by name: " + location);
 
 //      ArrayList<DetailedWeatherForecastSample> samples = ws.getDailyForecast(ws.getLocationByName("Liverpool"));
 //        for(DetailedWeatherForecastSample sample: samples) {
@@ -357,6 +350,10 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
 //
 //        TextualForecast textualForecast = ws.getLongTermForecast();
 //           System.out.println(textualForecast);
+        }
+        catch(ApiException e) {
+            System.err.println(e.getMessage());
+        }
     }
 
 

@@ -10,7 +10,7 @@ import java.util.Calendar;
  */
 public class PlaceholderWeatherForecastService implements WeatherForecastService {
     @Override
-    public ArrayList<DetailedWeatherForecastSample> getDetailedForecast(Location location) {
+    public ArrayList<DetailedWeatherForecastSample> getDetailedForecast(Location location) throws ApiException {
         // Ascending values for testing
         ArrayList<DetailedWeatherForecastSample> samples = new ArrayList<DetailedWeatherForecastSample>();
         Calendar start = Calendar.getInstance();
@@ -34,7 +34,7 @@ public class PlaceholderWeatherForecastService implements WeatherForecastService
     }
 
     @Override
-    public ArrayList<DetailedWeatherForecastSample> getDailyForecast(Location location) {
+    public ArrayList<DetailedWeatherForecastSample> getDailyForecast(Location location) throws ApiException {
         ArrayList<DetailedWeatherForecastSample> samples = new ArrayList<DetailedWeatherForecastSample>();
         Calendar start = Calendar.getInstance();
         Duration resolution = Duration.ofHours(24);
@@ -57,7 +57,7 @@ public class PlaceholderWeatherForecastService implements WeatherForecastService
     }
 
     @Override
-    public TextualForecast getLongTermForecast() {
+    public TextualForecast getLongTermForecast() throws ApiException {
         TextualForecast textualForecast = new TextualForecast();
         textualForecast.period = "The next 30 days";
         textualForecast.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
@@ -67,7 +67,7 @@ public class PlaceholderWeatherForecastService implements WeatherForecastService
 
 
     @Override
-    public ArrayList<Location> getAvailableLocations() {
+    public ArrayList<Location> getAvailableLocations() throws ApiException {
         ArrayList<Location> locations = new ArrayList<>();
         locations.add(new Location("Liverpool", "?", 53.4f, -2.99f));
         locations.add(new Location("Manchester", "?", 53.4f, -2.24f));
@@ -82,7 +82,7 @@ public class PlaceholderWeatherForecastService implements WeatherForecastService
 
 
     @Override
-    public Location getLocationByName(String displayName) {
+    public Location getLocationByName(String displayName) throws ApiException {
         for(Location l: getAvailableLocations()) {
             if(l.getDisplayName().equals(displayName)) {
                 return l;
@@ -93,15 +93,19 @@ public class PlaceholderWeatherForecastService implements WeatherForecastService
 
 
     public static void main(String[] args) {
-        PlaceholderWeatherForecastService ws = new PlaceholderWeatherForecastService();
-        for(Location location: ws.getAvailableLocations()) {
-            System.out.println(location.getDisplayName());
-        }
+        try {
+            PlaceholderWeatherForecastService ws = new PlaceholderWeatherForecastService();
+            for (Location location : ws.getAvailableLocations()) {
+                System.out.println(location.getDisplayName());
+            }
 
-        Location liv = ws.getAvailableLocations().get(0);
+            Location liv = ws.getAvailableLocations().get(0);
 
-        for(DetailedWeatherForecastSample sample: ws.getDetailedForecast(liv)) {
-            System.out.println(sample);
+            for (DetailedWeatherForecastSample sample : ws.getDetailedForecast(liv)) {
+                System.out.println(sample);
+            }
+        } catch(ApiException e) {
+            System.err.println("PlaceholderWeatherForecastService has thrown an ApiException, which it shouldn't have...");
         }
     }
 }

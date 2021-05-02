@@ -2,10 +2,12 @@ package com.example.weatherbroadcastapp;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Application;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
+import com.example.lib.ApiException;
 import com.example.lib.DetailedWeatherForecastSample;
 import com.example.lib.Location;
 import com.example.lib.LocationService;
@@ -62,9 +64,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         weatherService  = Services.get().getWeatherForecastService();
         locationService = Services.get().getLocationService();
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        
-        for(Location location: weatherService.getAvailableLocations()) {
-            recognizedLocations.add(location.getDisplayName());
+
+        try {
+            for (Location location : weatherService.getAvailableLocations()) {
+                recognizedLocations.add(location.getDisplayName());
+            }
+        }
+        catch(ApiException e) {
+            WeatherBroadcastApplication.handleApiException(e);
         }
 
         ArrayAdapter<String> adapter = new AutoCompleteFavouriteLocationAdapter(this,
@@ -87,7 +94,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void initializeLocation() {
         // Default location set to London if user doesn't want to share their location
         // (they can always set it manually if they like)
-        locationService.setSelectedLocation(weatherService.getLocationByName("London"));
+        try {
+            locationService.setSelectedLocation(weatherService.getLocationByName("London"));
+        }
+        catch(ApiException e) {
+            WeatherBroadcastApplication.handleApiException(e);
+        }
 
         if(ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -109,14 +121,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     android.location.Location location = task.getResult();
                     location.getLatitude();
 
-                    Location newLocation = Utilities.findClosestLocation(weatherService.getAvailableLocations(), location.getLatitude(), location.getLongitude());
-                    if(newLocation != null) {
-                        locationService.setSelectedLocation(newLocation);
+                    try {
+                        Location newLocation = Utilities.findClosestLocation(weatherService.getAvailableLocations(), location.getLatitude(), location.getLongitude());
+                        if (newLocation != null) {
+                            locationService.setSelectedLocation(newLocation);
+                        } else {
+                            System.out.println("ERROR. Could not find closest location for some reason.");
+                        }
+                        updateWeatherInfo();
                     }
-                    else {
-                        System.out.println("ERROR. Could not find closest location for some reason.");
+                    catch(ApiException e) {
+                        WeatherBroadcastApplication.handleApiException(e);
                     }
-                    updateWeatherInfo();
                 }
             });
         }
@@ -181,21 +197,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ImageView imageView_weatherIcon = findViewById(R.id.imageView_weatherIcon);
         textView_currentLocation.setText(locationService.getSelectedLocation().getDisplayName());
 
-        DetailedWeatherForecastSample sample = Services.get().getWeatherForecastService().getDetailedForecast(locationService.getSelectedLocation()).get(0);
-        textView_currentTemperature.setText(String.format(getString(R.string.n_degrees_c), (int)sample.temperature_celsius));
-        textView_currentWindSpeed.setText(String.valueOf((int)sample.windSpeed_mph));
-        imageView_weatherIcon.setImageResource(WeatherIcons.getIconId(sample.weatherType));
+        try {
+            DetailedWeatherForecastSample sample = Services.get().getWeatherForecastService().getDetailedForecast(locationService.getSelectedLocation()).get(0);
+            textView_currentTemperature.setText(String.format(getString(R.string.n_degrees_c), (int) sample.temperature_celsius));
+            textView_currentWindSpeed.setText(String.valueOf((int) sample.windSpeed_mph));
+            imageView_weatherIcon.setImageResource(WeatherIcons.getIconId(sample.weatherType));
 
-        imageView_currentWindDirection.setRotation(sample.windDirection_degrees);
+            imageView_currentWindDirection.setRotation(sample.windDirection_degrees);
 
-        ImageView[] dailyIcons = {
-                findViewById(R.id.weatherIcon_day1),
-                findViewById(R.id.weatherIcon_day2),
-                findViewById(R.id.weatherIcon_day3)
-        };
-        ArrayList<DetailedWeatherForecastSample> dailyForecast = Services.get().getWeatherForecastService().getDailyForecast(locationService.getSelectedLocation());
-        for(int i = 1; i < dailyForecast.size() && i < 4; ++i) {
-            dailyIcons[i - 1].setImageResource(WeatherIcons.getIconId(dailyForecast.get(i).weatherType));
+            ImageView[] dailyIcons = {
+                    findViewById(R.id.weatherIcon_day1),
+                    findViewById(R.id.weatherIcon_day2),
+                    findViewById(R.id.weatherIcon_day3)
+            };
+            ArrayList<DetailedWeatherForecastSample> dailyForecast = Services.get().getWeatherForecastService().getDailyForecast(locationService.getSelectedLocation());
+            for (int i = 1; i < dailyForecast.size() && i < 4; ++i) {
+                dailyIcons[i - 1].setImageResource(WeatherIcons.getIconId(dailyForecast.get(i).weatherType));
+            }
+        }
+        catch(ApiException e) {
+            WeatherBroadcastApplication.handleApiException(e);
         }
     }
 
@@ -203,22 +224,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if (actionId == EditorInfo.IME_ACTION_DONE) {
-            Location selectedLocation = weatherService.getLocationByName(v.getText().toString());
-            if(selectedLocation != null) {
-                locationService.setSelectedLocation(selectedLocation);
-                InputMethodManager imm = (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                v.clearFocus();
-                updateWeatherInfo();
-                locationService.registerLocationUsage(selectedLocation.getDisplayName());
-            }
-            else {
-                Toast.makeText(MainActivity.this,
-                        String.format(getString(R.string.unrecognized_location_msg) , v.getText()),
-                        Toast.LENGTH_SHORT).show();
-            }
+            try {
+                Location selectedLocation = weatherService.getLocationByName(v.getText().toString());
+                if (selectedLocation != null) {
+                    locationService.setSelectedLocation(selectedLocation);
+                    InputMethodManager imm = (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    v.clearFocus();
+                    updateWeatherInfo();
+                    locationService.registerLocationUsage(selectedLocation.getDisplayName());
+                } else {
+                    Toast.makeText(MainActivity.this,
+                            String.format(getString(R.string.unrecognized_location_msg), v.getText()),
+                            Toast.LENGTH_SHORT).show();
+                }
 
-            return true;
+                return true;
+            }
+            catch (ApiException e) {
+                WeatherBroadcastApplication.handleApiException(e);
+            }
         }
         return false;
     }

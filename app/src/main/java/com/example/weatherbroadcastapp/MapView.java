@@ -13,6 +13,7 @@ import android.view.View;
 
 import androidx.core.content.ContextCompat;
 
+import com.example.lib.ApiException;
 import com.example.lib.DetailedWeatherForecastSample;
 import com.example.lib.Location;
 import com.example.lib.Utilities;
@@ -83,28 +84,32 @@ public class MapView extends View {
         WeatherForecastService wfs = Services.get().getWeatherForecastService();
         significantLocations = new ArrayList<Location>();
 
-        for(String lName: significantLocationNames) {
-            Location l = wfs.getLocationByName(lName);
-            if(l != null) {
-                significantLocations.add(l);
+        try {
+            for (String lName : significantLocationNames) {
+                Location l = wfs.getLocationByName(lName);
+                if (l != null) {
+                    significantLocations.add(l);
+                } else {
+                    System.err.println("ERROR in MapView. Significant location " + lName + " not recognized by service");
+                }
             }
-            else {
-                System.err.println("ERROR in MapView. Significant location " + lName + " not recognized by service");
+
+            for (Location l : significantLocations) {
+                samples.put(l.getDisplayName(), wfs.getDetailedForecast(l));
+            }
+
+            numSamples = samples.get(significantLocations.get(0).getDisplayName()).size();
+            for (Location l : significantLocations) {
+                final int n = samples.get(l.getDisplayName()).size();
+                if (n < numSamples) {
+                    System.err.println("Location " + l.getDisplayName() +
+                            " has fewer samples than other location(s), at" + String.valueOf(n)
+                            + ". That probably shouldn't have happened...");
+                }
             }
         }
-
-        for(Location l: significantLocations) {
-            samples.put(l.getDisplayName(), wfs.getDetailedForecast(l));
-        }
-
-        numSamples = samples.get(significantLocations.get(0).getDisplayName()).size();
-        for(Location l: significantLocations) {
-            final int n = samples.get(l.getDisplayName()).size();
-            if(n < numSamples) {
-                System.err.println("Location " + l.getDisplayName() +
-                        " has fewer samples than other location(s), at" + String.valueOf(n)
-                        + ". That probably shouldn't have happened...");
-            }
+        catch(ApiException e) {
+            WeatherBroadcastApplication.handleApiException(e);
         }
     }
 

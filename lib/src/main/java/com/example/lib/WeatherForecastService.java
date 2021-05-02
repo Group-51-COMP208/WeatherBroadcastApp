@@ -14,7 +14,7 @@ public interface WeatherForecastService {
      * @return An array of weather forecast samples, ordered by increasing time in increments
      * specified by 'resolution', starting from 'start'.
      */
-    ArrayList<DetailedWeatherForecastSample> getDetailedForecast(Location location);
+    ArrayList<DetailedWeatherForecastSample> getDetailedForecast(Location location) throws ApiException;
 
     /**
      * A forecast with general weather conditions for a day
@@ -22,7 +22,7 @@ public interface WeatherForecastService {
      * as many consecutive days are available from the underlying API
      * from the underlying API.
      */
-    ArrayList<DetailedWeatherForecastSample> getDailyForecast(Location location);
+    ArrayList<DetailedWeatherForecastSample> getDailyForecast(Location location) throws ApiException;
 
 
     /**
@@ -30,7 +30,7 @@ public interface WeatherForecastService {
      * @return A plain text natural language weather forecast
      * @see TextualForecast
      */
-    TextualForecast getLongTermForecast();
+    TextualForecast getLongTermForecast() throws ApiException;
 
     /**
      * Gets all the locations supported by the weather service
@@ -40,12 +40,12 @@ public interface WeatherForecastService {
      * @return All the locations supported by the weather service, with
      * all properties set correctly
      */
-    ArrayList<Location> getAvailableLocations();
+    ArrayList<Location> getAvailableLocations() throws ApiException;
 
     /**
      *
      * @param displayName name of the location, as it appears in the underlying API
      * @return Location object of the requested displayName, with all other fields set
      */
-    Location getLocationByName(String displayName);
+    Location getLocationByName(String displayName) throws ApiException;
 }

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.example.lib.ApiException;
 import com.example.lib.TextualForecast;
 import com.example.lib.Utilities;
 
@@ -17,11 +18,16 @@ public class LongTermForecastActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_long_term_forecast);
 
-        TextualForecast forecast = Services.get().getWeatherForecastService().getLongTermForecast();
-        TextView periodText = findViewById(R.id.textView_longTermForecastPeriod);
-        periodText.setText(forecast.period);
+        try {
+            TextualForecast forecast = Services.get().getWeatherForecastService().getLongTermForecast();
+            TextView periodText = findViewById(R.id.textView_longTermForecastPeriod);
+            periodText.setText(forecast.period);
 
-        TextView textBody   = findViewById(R.id.textView_longTermForecastBody);
-        textBody.setText(forecast.text);
+            TextView textBody = findViewById(R.id.textView_longTermForecastBody);
+            textBody.setText(forecast.text);
+        }
+        catch(ApiException e) {
+            WeatherBroadcastApplication.handleApiException(e);
+        }
     }
 }
