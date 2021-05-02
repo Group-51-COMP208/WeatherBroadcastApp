@@ -46,9 +46,9 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
     }
 
 
-            /**
-             * @see WeatherForecastService
-             */
+    /**
+     * @see WeatherForecastService
+     */
     @Override
     public ArrayList<DetailedWeatherForecastSample> getDetailedForecast(Location location) {
         // We are expecting 3 hourly samples so will be 8 in a full day
@@ -217,64 +217,8 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
     }
 
 
+
     /**
-     * @see WeatherForecastService
-     */
-    public ArrayList<SimpleWeatherForecastSample> getSimpleForecast(Location location) {
-        // TODO: Please implement
-        // Forecast API
-        // URL simpleData = new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/352409?res=daily&key=474b382b-4970-4685-a1dd-8bffd071216b");
-        // Location API
-        // URL simpleloc =  new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxobs/all/json/sitelist?key=6cb4001b-cb25-4682-baf3-61a64918d89b");
-//        if (simpleforecast == null) {
-//            try {
-//                simpleforecast = new ArrayList<SimpleWeatherForecastSample>();
-//                URL locUrl = new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/352409?res=daily&key=" + apiKey);
-//                HttpURLConnection connection = (HttpURLConnection) locUrl.openConnection();
-//                try {
-////                    Reader reader = new InputStreamReader(connection.getInputStream());
-////                    JSONParser parser = new JSONParser();
-////                    JSONObject obj = (JSONObject) parser.parse(reader);
-////
-////                    JSONObject forecast = (JSONObject) obj.get("Forecasts");
-////                    JSONArray forecasts = (JSONArray) forecast.get("Forecast");
-////                    for (Object o : forecasts) {
-////                        JSONObject jobj = (JSONObject) o;
-////                        Calendar timeStamp = (Calendar) jobj.get("timeStamp");
-////                        //String weatherType  = (String) jobj.get("weatherType");
-////
-////                        for (int i = 0; i < numSamples; ++i) {
-////                            //   ArrayList<String> data = new ArrayList<>();
-////                            JSONObject simpleforecast = (JSONObject) forecast.get(i);
-////                            String loc = location.getDisplayName();
-////                            // data.add(loc);
-////                        }
-////                        Location loc = (Location) jobj.get("location");
-////                        //   simpleforecast.add(data);
-////                        simpleforecast.add(new SimpleWeatherForecastSample(
-////                                weatherType,
-////                                loc
-////                        ));
-//                    }
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                } finally {
-//                    connection.disconnect();
-//                }
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        return simpleforecast;
-
-         return null;
-    }
-
-
-        /**
-=======
-    /**
->>>>>>> origin/master
      * @see WeatherForecastService
      * @return
      */
