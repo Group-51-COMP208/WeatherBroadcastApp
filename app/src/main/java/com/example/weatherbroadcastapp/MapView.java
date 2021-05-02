@@ -40,6 +40,7 @@ public class MapView extends View {
 
     private static final int ICON_DRAW_SIZE = 100;
 
+    private final String[] significantLocationNames = {"London", "Brecon", "Manchester", "Glasgow", "Belfast"};
     private ArrayList<Location> significantLocations;
     private Calendar startTime;
     private int currentSample = 0;
@@ -81,11 +82,16 @@ public class MapView extends View {
 
         WeatherForecastService wfs = Services.get().getWeatherForecastService();
         significantLocations = new ArrayList<Location>();
-        significantLocations.add(wfs.getLocationByName("London"));
-        significantLocations.add(wfs.getLocationByName("Brecon"));
-        significantLocations.add(wfs.getLocationByName("Manchester"));
-        significantLocations.add(wfs.getLocationByName("Glasgow"));
-        significantLocations.add(wfs.getLocationByName("Belfast"));
+
+        for(String lName: significantLocationNames) {
+            Location l = wfs.getLocationByName(lName);
+            if(l != null) {
+                significantLocations.add(l);
+            }
+            else {
+                System.err.println("ERROR in MapView. Significant location " + lName + " not recognized by service");
+            }
+        }
 
         startTime = Calendar.getInstance();
 
