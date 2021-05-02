@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
+import com.example.lib.DailyForecastSample;
 import com.example.lib.DetailedWeatherForecastSample;
 import com.example.lib.Location;
 import com.example.lib.LocationService;
@@ -175,13 +176,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ImageView imageView_weatherIcon = findViewById(R.id.imageView_weatherIcon);
         textView_currentLocation.setText(locationService.getSelectedLocation().getDisplayName());
 
-        // TODO: Verify that this actually returns the current weather
         DetailedWeatherForecastSample sample = Services.get().getWeatherForecastService().getDetailedForecast(locationService.getSelectedLocation()).get(0);
         textView_currentTemperature.setText(String.format(getString(R.string.n_degrees_c), (int)sample.temperature_celsius));
         textView_currentWindSpeed.setText(String.valueOf((int)sample.windSpeed_mph));
         imageView_weatherIcon.setImageResource(WeatherIcons.getIconId(sample.weatherType));
 
         imageView_currentWindDirection.setRotation(sample.windDirection_degrees);
+
+        ImageView[] dailyIcons = {
+                findViewById(R.id.weatherIcon_day1),
+                findViewById(R.id.weatherIcon_day2),
+                findViewById(R.id.weatherIcon_day3)
+        };
+        ArrayList<DetailedWeatherForecastSample> dailyForecast = Services.get().getWeatherForecastService().getDailyForecast(locationService.getSelectedLocation());
+        for(int i = 1; i < dailyForecast.size() && i < 4; ++i) {
+            dailyIcons[i - 1].setImageResource(WeatherIcons.getIconId(dailyForecast.get(i).weatherType));
+        }
     }
 
 
