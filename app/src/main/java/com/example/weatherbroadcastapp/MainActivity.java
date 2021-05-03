@@ -124,19 +124,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 @Override
                 public void onComplete(@NonNull Task<android.location.Location> task) {
                     android.location.Location location = task.getResult();
-                    location.getLatitude();
-
-                    try {
-                        Location newLocation = Utilities.findClosestLocation(weatherService.getAvailableLocations(), location.getLatitude(), location.getLongitude());
-                        if (newLocation != null) {
-                            locationService.setSelectedLocation(newLocation);
-                        } else {
-                            System.out.println("ERROR. Could not find closest location for some reason.");
+                    if(location != null) {
+                        try {
+                            Location newLocation = Utilities.findClosestLocation(weatherService.getAvailableLocations(), location.getLatitude(), location.getLongitude());
+                            if (newLocation != null) {
+                                locationService.setSelectedLocation(newLocation);
+                            } else {
+                                System.out.println("ERROR. Could not find closest location for some reason.");
+                            }
+                            updateWeatherInfo();
+                        } catch (ApiException e) {
+                            handleApiException(e);
                         }
-                        updateWeatherInfo();
-                    }
-                    catch(ApiException e) {
-                        handleApiException(e);
                     }
                 }
             });
