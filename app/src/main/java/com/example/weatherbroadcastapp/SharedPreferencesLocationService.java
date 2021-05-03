@@ -46,6 +46,10 @@ public class SharedPreferencesLocationService implements LocationService {
 
     @Override
     public void registerLocationUsage(String displayName) {
+        if(recentLocations.contains(displayName)) {
+            return;
+        }
+
         if(recentLocations.size() >= MAX_FAVOURITES) {
             recentLocations.remove();
         }
