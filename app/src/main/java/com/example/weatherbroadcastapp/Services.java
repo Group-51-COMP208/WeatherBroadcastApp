@@ -33,7 +33,6 @@ public class Services {
     }
 
     private Services() {
-        // Placeholder. TODO: Switch to real implementation once it is sufficiently complete
         weatherForecastService = new MetOfficeWeatherForecastService();
         locationService = new SharedPreferencesLocationService();
     }

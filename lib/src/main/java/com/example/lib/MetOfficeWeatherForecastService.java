@@ -54,8 +54,6 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
         // We are expecting 3 hourly samples so will be 8 in a full day
         final int expectedDailySamples = 8;
         final int sampleHourlyResolution = 3;
-
-        // TODO: Please implement
         // Forecast API
         // URL detailData = new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/352409?res=3hourly&key=474b382b-4970-4685-a1dd-8bffd071216b");
         // Location API
@@ -86,7 +84,6 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
                     // Get rid of the trailing 'Z' (incidentally, I think this just indicates UTC+0
                     dateSplit[2] = dateSplit[2].substring(0, dateSplit[2].length() - 1);
 
-                    // TODO: Error catching?
                     int year = Integer.parseInt(dateSplit[0]);
                     int month = Integer.parseInt(dateSplit[1]);
                     int dayOfMonth = Integer.parseInt(dateSplit[2]);
@@ -138,7 +135,6 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
 
     @Override
     public ArrayList<DetailedWeatherForecastSample> getDailyForecast(Location location) throws ApiException {
-        // TODO: Please implement
         // URL detailData = new URL("http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/352409?res=3hourly&key=474b382b-4970-4685-a1dd-8bffd071216b");
         ArrayList<DetailedWeatherForecastSample> samples = new ArrayList<DetailedWeatherForecastSample>();
         try {
@@ -166,7 +162,6 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
                     // Get rid of the trailing 'Z' (incidentally, I think this just indicates UTC+0)
                     dateSplit[2] = dateSplit[2].substring(0, dateSplit[2].length() - 1);
 
-                    // TODO: Error catching?
                     int year = Integer.parseInt(dateSplit[0]);
                     int month = Integer.parseInt(dateSplit[1]);
                     System.out.println(dateSplit[1] + " parsed to " + String.valueOf(month));
@@ -222,7 +217,6 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
      */
     @Override
     public TextualForecast getLongTermForecast() throws ApiException {
-        // TODO: Please implement
         // API link
         // URL longterm = new URL("http://datapoint.metoffice.gov.uk/public/data/txt/wxfcs/regionalforecast/json/500?key=6cb4001b-cb25-4682-baf3-61a64918d89b");
         TextualForecast textualForecast = new TextualForecast();
