@@ -226,7 +226,9 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
         // API link
         // URL longterm = new URL("http://datapoint.metoffice.gov.uk/public/data/txt/wxfcs/regionalforecast/json/500?key=6cb4001b-cb25-4682-baf3-61a64918d89b");
         TextualForecast textualForecast = new TextualForecast();
-            try {
+        textualForecast.period = "Next 30 days";
+        textualForecast.text = "";
+        try {
                 URL texturalUrl = new URL("http://datapoint.metoffice.gov.uk/public/data/txt/wxfcs/regionalforecast/json/500?key=" + apiKey);
                 HttpURLConnection connection = (HttpURLConnection) texturalUrl.openConnection();
                 try {
@@ -236,22 +238,17 @@ public class MetOfficeWeatherForecastService implements WeatherForecastService {
 
                     JSONObject RegionalFcst = (JSONObject) obj.get("RegionalFcst");
                     JSONObject FcstPeriods = (JSONObject) RegionalFcst.get("FcstPeriods");
-                    JSONArray textperiod = (JSONArray) FcstPeriods.get("Period");
+                    JSONArray periods = (JSONArray) FcstPeriods.get("Period");
 
-                  /*  for(Object o:textperiod){
-                        JSONObject jobj = (JSONObject) o;
-                        textualForecast.period = jobj.get("id").toString();
-                        textualForecast.text =  jobj.get("Paragraph").toString();
-                        return textualForecast;
-                    }  */
-                    for (int i = 0; i < textperiod.size(); i++) {
-                        JSONArray paragraph = (JSONArray) ((JSONObject) textperiod.get(i)).get("Paragraph");
-                        JSONObject jobj = (JSONObject) paragraph.get(i);
-                        JSONObject id = (JSONObject) textperiod.get(i);
-                        textualForecast.period = "LongTerm weather forecast for "+id.get("id").toString();
-                        textualForecast.text = jobj.get("$").toString();
-                       // System.out.println(textualForecast);
-                        return textualForecast;
+                    // Skipping the first two periods as these are actually localized for the next
+                    // few days. We want the long term forecast for the whole UK.
+                    for (int i = 2; i < periods.size(); ++i) {
+                        JSONObject periodObj = (JSONObject) periods.get(i);
+                        JSONObject paragraph = (JSONObject) periodObj.get("Paragraph");
+                        textualForecast.text += (String) paragraph.get("title");
+                        textualForecast.text += "\n\n";
+                        textualForecast.text += (String) paragraph.get("$");
+                        textualForecast.text += "\n\n\n";
                     }
                 } finally {
                     connection.disconnect();
